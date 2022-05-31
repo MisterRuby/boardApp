@@ -1,0 +1,28 @@
+@import url('/css/style.css');
+
+/* top-nav */
+.top-nav {
+  box-sizing: border-box;
+  line-height: 50px;
+  height: 50px;
+  text-align: end;
+  font-size: 18px;
+  font-weight: 300;
+  padding-right: 10px;
+}
+
+.top-nav a {
+  margin-right: 10px;
+}
+
+/* title */
+.title {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  font-size: 80px;
+  width: 660px;
+  text-align: center;
+}

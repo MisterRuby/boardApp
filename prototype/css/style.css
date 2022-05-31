@@ -1,0 +1,19 @@
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  line-height: 1.5em;
+  margin: 0;
+  font-weight: 300;
+  background-color: #eee;
+  font-size: 15px;
+}
+
+a {
+  color: #222;
+  text-decoration: none;
+}
+
+input[type=submit] {
+  cursor: pointer;
+}

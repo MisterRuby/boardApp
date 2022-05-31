@@ -23,6 +23,7 @@
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
   font-size: 80px;
+  font-weight: 600;
   width: 660px;
   text-align: center;
 }

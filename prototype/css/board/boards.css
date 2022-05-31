@@ -1,0 +1,82 @@
+@import url('/css/style.css');
+
+/* top-nav */
+.top-nav {
+  background-color: #fff;
+  line-height: 50px;
+  height: 50px;
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.top-nav > a {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.account a{
+  font-size: 18px;
+  font-weight: 300;
+  margin-right: 10px;
+}
+
+/* container */
+.container {
+  width: 100%;
+  height: calc(100vh - 50px);
+  text-align: center;
+}
+
+
+.boards,
+.page-nav {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+}
+
+.boards {
+  height: 600px;
+}
+
+.board {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid crimson;
+  height: 60px;
+  text-align: left;
+}
+
+.board .board-left {
+  width: 60%;
+  padding-left: 10px;
+}
+
+.board .board-right {
+  width: 40%;
+}
+
+.board .board-right .board-right-top span {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.board .board-right .board-right-bottom span {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.no {
+  margin: 0;
+}
+
+.page-nav {
+  height: 50px;
+  line-height: 50px;
+}
+
+.page-nav a {
+  margin: auto 5px;
+}

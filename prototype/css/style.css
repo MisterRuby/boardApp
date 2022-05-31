@@ -1,5 +1,10 @@
 @import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
 
+* {
+  box-sizing: border-box;
+  outline: none;
+}
+
 body {
   font-family: 'Noto Sans KR', sans-serif;
   line-height: 1.5em;
@@ -12,6 +17,7 @@ body {
 a {
   color: #222;
   text-decoration: none;
+  cursor: pointer;
 }
 
 input[type=submit] {

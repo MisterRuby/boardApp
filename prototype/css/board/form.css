@@ -1,0 +1,63 @@
+@import url('/css/style.css');
+@import url('/css/ck.css');
+
+/* top-nav */
+.top-nav {
+  background-color: #fff;
+  line-height: 50px;
+  height: 50px;
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.top-nav>a {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.account a {
+  font-size: 18px;
+  font-weight: 300;
+  margin-right: 10px;
+}
+
+/* container */
+.container {
+  width: 100%;
+  height: calc(100vh - 50px);
+  padding: 30px;
+}
+
+/* board */
+.board {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 100%;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 10px 10px;
+}
+
+.board input {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.board button {
+  position: absolute;
+  border: none;
+  background-color: crimson;
+  color: #eee;
+  font-size: 18px;
+  padding: 5px;
+  right: 10px;
+  width: 60px;
+  margin-top: 10px;
+}

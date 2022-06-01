@@ -1,0 +1,5 @@
+.ck-rounded-corners {
+  border: 1px solid crimson;
+  max-width: 100%;
+  height: calc(100vh - 270px);
+}

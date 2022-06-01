@@ -25,7 +25,7 @@
 .container {
   width: 100%;
   height: calc(100vh - 50px);
-  padding: 10px;
+  padding: 30px;
 }
 
 /* board */
@@ -37,14 +37,16 @@
   height: 100%;
   background-color: #fff;
   border: 1px solid #ddd;
-  overflow: scroll;
-  padding: 10px 0;
+  overflow-y: scroll;
+  padding: 10px 10px;
 }
 
-.board-info {
+.board-nav {
   border-bottom: 1px solid #ddd;
   padding: 5px;
-  height: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .board-info p {
@@ -53,6 +55,14 @@
 
 .board-info span {
   margin-right: 10px;
+}
+
+.board-btns button,
+.board-btns a {
+  background-color: white;
+  border: none;
+  font-weight: 500;
+  font-size: 16px;
 }
 
 .title {
@@ -74,10 +84,18 @@
 }
 
 .comments > p {
-  border-bottom: 1px solid #ddd;
   padding: 5px 0;
 }
 
 .comment {
+  position: relative;
   border-bottom: 1px solid #ddd;
+}
+
+.comment .comment-delete {
+  position: absolute;
+  bottom: 15px;
+  right: 0;
+  background-color: white;
+  border: none;
 }

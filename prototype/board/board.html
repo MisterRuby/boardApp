@@ -21,11 +21,18 @@
   <div class="container">
     <div class="board">
       <!-- 작성자 닉네임, 작성일자, 추천수, 조회수-->
-      <div class="board-info">
-        <p>Ruby</p>
-        <span>2022-05-31</span>
-        <span>추천수 5</span>
-        <span>조회수 10</span>
+      <div class="board-nav">
+        <div class="board-info">
+          <p>Ruby</p>
+          <span>2022-05-31</span>
+          <span>추천수 5</span>
+          <span>조회수 10</span>
+        </div>
+        <div class="board-btns">
+          <!-- 수정의 경우 수정 페이지와 해당 데이터를 조회 - GET -->
+          <a href="/board/editForm.html">수정</a>
+          <button>삭제</button>
+        </div>
       </div>
       <!-- 제목 -->
       <h2 class="title">글 제목입니다.</h2>
@@ -40,6 +47,7 @@
         <div class="comment">
           <p>Diamond</p>
           <p>댓글 내용입니다.</p>
+          <button class="comment-delete">삭제</button>
         </div>
         <div class="comment">
           <p>Diamond</p>

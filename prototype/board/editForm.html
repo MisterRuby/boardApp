@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Board</title>
+  <link rel="stylesheet" href="/css/board/form.css">
+  <link rel="icon" href="/img/rubyImg.jpeg">
+  <!-- 클래식 에디터 -->
+  <script src="https://cdn.ckeditor.com/ckeditor5/29.1.0/classic/ckeditor.js"></script>
+</head>
+
+<body>
+
+  <div class="top-nav">
+    <!-- 메인 페이지 이동 -->
+    <a href="/index.html">Ruby's Board</a>
+    <div class="account">
+      <a href="/index.html">로그아웃</a>
+    </div>
+  </div>
+
+  <!-- 제목, 글 내용 입력 -->
+  <div class="container">
+    <div class="board">
+      <input type="text" class="title" name="title" id="" value="제목을 수정해서 저장">
+      <textarea name="content" class="content" id="" cols="30" rows="10"></textarea>
+      <button>수정</button>
+    </div>
+  </div>
+
+  <!-- CK Editor script-->
+  <script src="/js/ck.js">
+  </script>
+</body>
+
+</html>

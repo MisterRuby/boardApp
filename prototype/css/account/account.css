@@ -40,7 +40,6 @@ section {
 .account-form input {
   display: block;
   width: 100%;
-  box-sizing: border-box;
   padding: 10px;
   margin-bottom: 10px;
   font-size: 18px;

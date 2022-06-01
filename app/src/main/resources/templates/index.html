@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Board</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="icon" href="/img/rubyImg.jpeg">
+</head>
+<body>
+<div class="top-nav">
+    <!--
+        TODO
+        로그인 상태에 따라 버튼 종류가 달라져야 함
+        로그인 상태 - 로그아웃
+        비로그인 상태 - 로그인, 회원가입
+    -->
+    <button th:onclick="|location.href='@{/account/login}'|">로그인</button>
+    <button th:onclick="|location.href='@{/account/sign-up}'|">회원가입</button>
+
+</div>
+
+<a class="title" href="/board/boards.html">Ruby's Board</a>
+
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+@import url('/css/style.css');
+
+/* top-nav */
+.top-nav {
+  background-color: #fff;
+  line-height: 50px;
+  height: 50px;
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.top-nav>a {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.account a {
+  font-size: 18px;
+  font-weight: 300;
+  margin-right: 10px;
+}
+
+/* container */
+.container {
+  width: 100%;
+  height: calc(100vh - 50px);
+  padding: 30px;
+}
+
+/* board */
+.board {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 100%;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  overflow-y: scroll;
+  padding: 10px 10px;
+}
+
+.board-nav {
+  border-bottom: 1px solid #ddd;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.board-info p {
+  margin: 0;
+}
+
+.board-info span {
+  margin-right: 10px;
+}
+
+.board-btns button,
+.board-btns a {
+  background-color: white;
+  border: none;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.title {
+  margin: 0;
+  margin-top: 10px;
+  padding: 5px;
+  height: 70px;
+  line-height: 60px;
+  border-bottom: 1px solid #ddd;
+}
+
+.board article {
+  border-bottom: 1px solid #ddd;
+  padding: 5px;
+}
+
+.comments {
+  padding: 5px;
+}
+
+.comments > p {
+  padding: 5px 0;
+}
+
+.comment {
+  position: relative;
+  border-bottom: 1px solid #ddd;
+}
+
+.comment .comment-delete {
+  position: absolute;
+  bottom: 15px;
+  right: 0;
+  background-color: white;
+  border: none;
+}

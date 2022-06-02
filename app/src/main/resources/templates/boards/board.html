@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
   <meta charset="UTF-8">
   <title>Board</title>
-  <link rel="stylesheet" href="/css/board/board.css ">
-  <link rel="icon" href="/img/rubyImg.jpeg">
+  <link rel="stylesheet" th:href="@{/css/boards/board.css}">
+  <link rel="icon" th:href="@{/img/rubyImg.jpeg}">
 </head>
 
 <body>
   <div class="top-nav">
     <!-- 메인 페이지 이동 -->
-    <a href="/index.html">Ruby's Board</a>
+    <a th:href="@{/}">Ruby's Board</a>
     <div class="account">
-      <a href="/account/login.html">로그인</a>
-      <a href="/account/sign-up.html">회원가입</a>
+      <a th:href="@{/account/login}">로그인</a>
+      <a th:href="@{/account/sign-up}">회원가입</a>
     </div>
   </div>
 
@@ -30,7 +32,7 @@
         </div>
         <div class="board-btns">
           <!-- 수정의 경우 수정 페이지와 해당 데이터를 조회 - GET -->
-          <a href="/board/editForm.html">수정</a>
+          <a th:href="@{/boards/12/edit}">수정</a>
           <button>삭제</button>
         </div>
       </div>

@@ -23,4 +23,13 @@ public class AccountController {
     public String signUpForm() {
         return "account/sign-up";
     }
+
+    /**
+     * 비밀번호 변경 페이지 이동
+     * @return
+     */
+    @GetMapping("/account/password-reset")
+    public String passwordResetForm() {
+        return "account/password-reset";
+    }
 }

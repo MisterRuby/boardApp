@@ -31,4 +31,16 @@ public class Account {
     private boolean emailVerified;                  // email 인증 여부
     private String emailCheckToken;                 // email 인증 시 사용할 토큰 값
     private LocalDateTime joinedAt;                 // 가입일자 (인증 확인 시점)
+
+
+
+    /** 비즈니스 메서드 */
+
+    /**
+     * 이메일 인증 토큰 생성
+     * @return
+     */
+    public void generateEmailCheckToken() {
+        this.emailCheckToken = UUID.randomUUID().toString();
+    }
 }

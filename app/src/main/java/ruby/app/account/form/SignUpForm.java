@@ -2,6 +2,7 @@ package ruby.app.account.form;
 
 import lombok.Getter;
 import lombok.Setter;
+import ruby.app.domain.Account;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

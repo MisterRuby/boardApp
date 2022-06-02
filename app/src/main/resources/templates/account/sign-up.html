@@ -19,17 +19,19 @@
   <section>
     <div class="account">
       <h1>회원가입</h1>
-      <form class="account-form" th:action th:object="${account}" th:method="post">
+      <form class="account-form" th:action th:object="${signUpForm}" th:method="post">
         <label for="email">Email</label>
-        <input type="email" id="email" th:field="*{email}" placeholder="email"
+        <input type="email" id="email" th:field="*{email}" placeholder="email" required
                th:errorclass="field-error">
         <div class="field-error" th:errors="*{email}" />
         <label for="nickname">Nickname</label>
-        <input type="text" id="nickname" th:field="*{nickname}" minlength="2" maxlength="20" placeholder="nickname"
+        <input type="text" id="nickname" th:field="*{nickname}" minlength="2" maxlength="20"
+               placeholder="nickname" required
                th:errorclass="field-error">
         <div class="field-error" th:errors="*{nickname}" />
         <label for="password">Password</label>
-        <input type="password" id="password" th:field="*{password}" minlength="8" maxlength="50" placeholder="password"
+        <input type="password" id="password" th:field="*{password}" minlength="8" maxlength="50"
+               placeholder="password" required
                th:errorclass="field-error">
         <div class="field-error" th:errors="*{password}" />
         <input type="submit" value="회원가입">

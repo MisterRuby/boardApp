@@ -1,5 +1,6 @@
 package ruby.app.account;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -8,10 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ruby.app.account.form.SignUpForm;
+import ruby.app.account.service.AccountService;
+import ruby.app.account.util.validate.SignUpFormValidator;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class AccountController {
+
+    private final AccountService accountService;                // 계정 서비스
+    private final SignUpFormValidator signUpFormValidator;      // 회원가입 검증
 
     /**
      * 로그인 페이지 이동
@@ -27,29 +34,27 @@ public class AccountController {
      * @return
      */
     @GetMapping("/account/sign-up")
-    public String signUpForm(@ModelAttribute("account") SignUpForm account) {
+    public String signUpForm(@ModelAttribute("signUpForm") SignUpForm signUpForm) {
         return "account/sign-up";
     }
 
-    // 회원가입 페이지에서 회원정보 입력 -> 가입 -> 메일 인증 -> 글쓰기 가능
     /**
      * 회원가입
      * @return
      */
     @PostMapping("/account/sign-up")
-    public String signUp(@Validated @ModelAttribute("account") SignUpForm signUpForm, BindingResult bindingResult) {
+    public String signUp(@Validated @ModelAttribute("signUpForm") SignUpForm signUpForm, BindingResult bindingResult) {
+        // 필드 검증
         if (bindingResult.hasErrors()) return "account/sign-up";
 
-        log.info("email={} / nickname={} / password={}",
-                signUpForm.getEmail(), signUpForm.getNickname(), signUpForm.getPassword());
+        // 이메일, 닉네임 중복 검증
+        signUpFormValidator.validate(signUpForm, bindingResult);
+        if (bindingResult.hasErrors()) return "account/sign-up";
 
-        /*
-            TODO - 회원 정보 저장. 저장 후 게시글 목록 페이지로 이동.
-                 이메일 인증 처리 구현 필요
-         */
+        accountService.signUp(signUpForm.getEmail(), signUpForm.getNickname(), signUpForm.getPassword());
+
         return "redirect:/boards";
     }
-
 
     /**
      * 비밀번호 변경 페이지 이동

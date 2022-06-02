@@ -18,7 +18,7 @@ public interface AccountService {
      * @param nickname
      * @param password
      */
-    void signUp(String email, String nickname, String password);
+    Account signUp(String email, String nickname, String password);
 
     /**
      * 로그인

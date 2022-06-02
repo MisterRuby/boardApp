@@ -31,9 +31,8 @@ section {
   text-align: center;
 }
 
-.account-form span {
+.account-form label{
   font-weight: 400;
-  display: block;
   margin-bottom: 2px;
 }
 

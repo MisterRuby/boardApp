@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--<html lang="ko"-->
+<!--      xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">-->
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
@@ -18,13 +19,19 @@
   <section>
     <div class="account">
       <h1>회원가입</h1>
-      <form class="account-form" action="">
-        <span>Email</span>
-        <input type="email" name="email" placeholder="email">
-        <span>Nickname</span>
-        <input type="text" name="nickname"placeholder="nickname">
-        <span>password</span>
-        <input type="password" name="password" placeholder="password">
+      <form class="account-form" th:action th:object="${account}" th:method="post">
+        <label for="email">Email</label>
+        <input type="email" id="email" th:field="*{email}" placeholder="email"
+               th:errorclass="field-error">
+        <div class="field-error" th:errors="*{email}" />
+        <label for="nickname">Nickname</label>
+        <input type="text" id="nickname" th:field="*{nickname}" minlength="2" maxlength="20" placeholder="nickname"
+               th:errorclass="field-error">
+        <div class="field-error" th:errors="*{nickname}" />
+        <label for="password">Password</label>
+        <input type="password" id="password" th:field="*{password}" minlength="8" maxlength="50" placeholder="password"
+               th:errorclass="field-error">
+        <div class="field-error" th:errors="*{password}" />
         <input type="submit" value="회원가입">
       </form>
     </div>

@@ -1,5 +1,6 @@
 package ruby.app.account;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,10 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.domain.Account;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,11 +31,14 @@ import static org.mockito.BDDMockito.*;
 class AccountControllerTest {
 
     @Autowired
+    MockMvc mockMvc;
+    @Autowired
     AccountRepository accountRepository;
     @Autowired
-    MockMvc mockMvc;
+    PasswordEncoder passwordEncoder;
     @MockBean
     JavaMailSender mailSender;
+
 
     @BeforeAll
     void addAdmin() {
@@ -158,12 +166,17 @@ class AccountControllerTest {
                         post("/account/sign-up")
                                 .param("email", "ruby@naver.com")
                                 .param("nickname", "ruby")
-                                .param("password", "adaASD12$$")
+                                .param("password", "Ruby12!@")
                                 .with(csrf())
                 )
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/boards"));
+
+        // 회원정보가 저장되었는지 확인
+        Optional<Account> optionalAccount = accountRepository.findByEmail("ruby@naver.com");
+        assertThat(optionalAccount.isPresent()).isTrue();
+        assertThat(optionalAccount.get().getPassword()).isNotEqualTo("Ruby12!@");
 
         // 메일을 보냈는지 확인
         then(mailSender).should().send(any(SimpleMailMessage.class));

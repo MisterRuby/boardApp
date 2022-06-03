@@ -3,6 +3,7 @@ package ruby.app.account.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
@@ -16,6 +17,7 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;          // 계정 Repository
     private final JavaMailSender mailSender;                    // 메일 sender - 콘솔 테스트 용
+    private final PasswordEncoder passwordEncoder;              // PasswordEncoder;
 
     /**
      * 회원 가입
@@ -25,7 +27,6 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Account signUp(String email, String nickname, String password) {
-        // TODO - password 인코딩 필요
         Account newAccount = saveNewAccount(email, nickname, password);
         newAccount.generateEmailCheckToken();   // 이메일 인증 토큰 생성
         sendSignUpConfirmEmail(newAccount);     // 회원 가입 인증 이메일 전송
@@ -59,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = Account.builder()
                 .email(email)
                 .nickname(nickname)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .build();
 
         return accountRepository.save(account);

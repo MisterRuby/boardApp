@@ -3,20 +3,27 @@ package ruby.app.account;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ruby.app.account.form.SignUpForm;
+import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
 import ruby.app.account.util.validate.SignUpFormValidator;
+import ruby.app.domain.Account;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
 public class AccountController {
 
+    private final AccountRepository accountRepository;
     private final AccountService accountService;                // 계정 서비스
     private final SignUpFormValidator signUpFormValidator;      // 회원가입 검증
 
@@ -55,6 +62,35 @@ public class AccountController {
 
         return "redirect:/boards";
     }
+
+    /**
+     * 이메일 인증 처리
+     * @param token
+     * @param email
+     * @param model
+     * @return
+     */
+    @GetMapping("/check-email-token")
+    public String checkEmailToken(String token, String email, Model model) {
+        // TODO - 이메일 인증 결과 페이지 필요. 메시지로 보낸 인증 링크를 이메일에서 누르면 해당 핸들러를 요청
+        Account account = accountRepository.findByEmail(email);
+
+        if (account == null) {
+            // 이메일에 해당하는 계정 정보가 없을 경우
+            model.addAttribute("error", "wrong.email");
+        } else if (!account.getEmailCheckToken().equals(token)) {
+            // 입력한 토큰 값이 다른 경우
+            model.addAttribute("error", "wrong.token");
+        } else {
+            account.setEmailVerified(true);
+            account.setJoinedAt(LocalDateTime.now());
+            model.addAttribute("nickname", account.getNickname());
+        }
+
+        return "account/checked-email";
+    }
+
+
 
     /**
      * 비밀번호 변경 페이지 이동

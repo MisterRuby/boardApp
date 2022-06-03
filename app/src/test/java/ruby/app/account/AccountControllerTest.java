@@ -174,9 +174,10 @@ class AccountControllerTest {
                 .andExpect(view().name("redirect:/boards"));
 
         // 회원정보가 저장되었는지 확인
-        Optional<Account> optionalAccount = accountRepository.findByEmail("ruby@naver.com");
-        assertThat(optionalAccount.isPresent()).isTrue();
-        assertThat(optionalAccount.get().getPassword()).isNotEqualTo("Ruby12!@");
+        Account account = accountRepository.findByEmail("ruby@naver.com");
+        assertThat(account).isNotNull();
+        assertThat(account.getEmailCheckToken()).isNotNull();
+        assertThat(account.getPassword()).isNotEqualTo("Ruby12!@");
 
         // 메일을 보냈는지 확인
         then(mailSender).should().send(any(SimpleMailMessage.class));

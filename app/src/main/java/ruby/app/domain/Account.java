@@ -16,7 +16,7 @@ import static javax.persistence.FetchType.EAGER;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@Getter @Setter
 public class Account {
 
     /** 컬럼 */

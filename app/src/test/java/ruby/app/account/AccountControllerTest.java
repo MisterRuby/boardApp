@@ -1,10 +1,10 @@
 package ruby.app.account;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,27 +13,34 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import ruby.app.account.repository.AccountRepository;
+import ruby.app.account.service.AccountService;
 import ruby.app.domain.Account;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.mockito.BDDMockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Transactional
 class AccountControllerTest {
 
     @Autowired
     MockMvc mockMvc;
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    AccountService accountService;
     @Autowired
     PasswordEncoder passwordEncoder;
     @MockBean
@@ -42,13 +49,19 @@ class AccountControllerTest {
 
     @BeforeAll
     void addAdmin() {
-        Account admin = Account.builder()
-                .email("admin@naver.com")
-                .nickname("admin")
-                .password("123!@#qweQWE")
-                .build();
+        accountService.signUp("admin@naver.com", "admin", "123!@#qweQWE");
+        accountService.signUp("ruby@naver.com", "ruby", "123!@#qweQWE");
+        Mockito.reset(mailSender);
+    }
 
-        accountRepository.save(admin);
+    @Test
+    @DisplayName("index 테스트")
+    void index() throws Exception {
+        mockMvc.perform(get("/"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andExpect(unauthenticated());
     }
 
     @Test
@@ -67,7 +80,7 @@ class AccountControllerTest {
         mockMvc.perform(
                 post("/account/sign-up")
                         .param("email", "adacf")
-                        .param("nickname", "ruby")
+                        .param("nickname", "ruby1")
                         .param("password", "adaASD12$$")
                         .with(csrf())
                 )
@@ -82,7 +95,7 @@ class AccountControllerTest {
     void validateSignUpNicknameError() throws Exception {
         mockMvc.perform(
                         post("/account/sign-up")
-                                .param("email", "ruby@naver.com")
+                                .param("email", "ruby1@naver.com")
                                 .param("nickname", "r")
                                 .param("password", "adaASD12$$")
                                 .with(csrf())
@@ -98,8 +111,8 @@ class AccountControllerTest {
     void validateSignUpPasswordError() throws Exception {
         mockMvc.perform(
                         post("/account/sign-up")
-                                .param("email", "ruby@naver.com")
-                                .param("nickname", "ruby")
+                                .param("email", "ruby1@naver.com")
+                                .param("nickname", "ruby1")
                                 .param("password", "adadfg")
                                 .with(csrf())
                 )
@@ -132,8 +145,8 @@ class AccountControllerTest {
     void validateExistsEmail() throws Exception {
         mockMvc.perform(
                         post("/account/sign-up")
-                                .param("email", "admin@naver.com")
-                                .param("nickname", "ruby")
+                                .param("email", "ruby@naver.com")
+                                .param("nickname", "ruby1")
                                 .param("password", "adaASD12$$")
                                 .with(csrf())
                 )
@@ -148,8 +161,8 @@ class AccountControllerTest {
     void validateExistsNickname() throws Exception {
         mockMvc.perform(
                         post("/account/sign-up")
-                                .param("email", "ruby@naver.com")
-                                .param("nickname", "admin")
+                                .param("email", "ruby1@naver.com")
+                                .param("nickname", "ruby")
                                 .param("password", "adaASD12$$")
                                 .with(csrf())
                 )
@@ -164,17 +177,18 @@ class AccountControllerTest {
     void validateSignUp() throws Exception {
         mockMvc.perform(
                         post("/account/sign-up")
-                                .param("email", "ruby@naver.com")
-                                .param("nickname", "ruby")
+                                .param("email", "ruby1@naver.com")
+                                .param("nickname", "ruby1")
                                 .param("password", "Ruby12!@")
                                 .with(csrf())
                 )
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/boards"));
+                .andExpect(authenticated())
+                .andExpect(view().name("redirect:/"));
 
         // 회원정보가 저장되었는지 확인
-        Account account = accountRepository.findByEmail("ruby@naver.com");
+        Account account = accountRepository.findByEmail("ruby1@naver.com");
         assertThat(account).isNotNull();
         assertThat(account.getEmailCheckToken()).isNotNull();
         assertThat(account.getPassword()).isNotEqualTo("Ruby12!@");
@@ -182,6 +196,54 @@ class AccountControllerTest {
         // 메일을 보냈는지 확인
         then(mailSender).should().send(any(SimpleMailMessage.class));
     }
+
+    @Test
+    @DisplayName("회원가입 이메일 인증 - 토큰값 오류")
+    void checkedEmailWrongToken() throws Exception {
+        mockMvc.perform(get("/account/check-email-token")
+                .param("token", "fewagagagn")
+                .param("email", "ruby@naver.com")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/checked-email"))
+                .andExpect(model().attributeExists("error"))
+                .andExpect(unauthenticated());
+    }
+
+    @Test
+    @DisplayName("회원가입 이메일 인증 - 이메일 값 오류")
+    void checkedEmailWrongEmail() throws Exception {
+        Account account = accountRepository.findByEmail("ruby@naver.com");
+        String token = account.getEmailCheckToken();
+
+        mockMvc.perform(get("/account/check-email-token")
+                        .param("token", token)
+                        .param("email", "ruby3@naver.com")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/checked-email"))
+                .andExpect(model().attributeExists("error"))
+                .andExpect(unauthenticated());
+    }
+
+    @Test
+    @DisplayName("회원가입 이메일 인증 - 정상 인증")
+    void checkedEmail() throws Exception {
+        Account account = accountRepository.findByEmail("ruby@naver.com");
+        String token = account.getEmailCheckToken();
+
+        mockMvc.perform(get("/account/check-email-token")
+                        .param("token", token)
+                        .param("email", "ruby@naver.com")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/checked-email"))
+                .andExpect(model().attributeDoesNotExist("error"))
+                .andExpect(model().attributeExists("nickname"))
+                .andExpect(authenticated());
+    }
+
+
 
     @Test
     @DisplayName("로그인 화면 테스트")

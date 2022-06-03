@@ -15,9 +15,6 @@ import ruby.app.account.service.AccountService;
 import ruby.app.account.util.validate.SignUpFormValidator;
 import ruby.app.domain.Account;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -27,11 +24,16 @@ public class AccountController {
     private final AccountService accountService;                // 계정 서비스
     private final SignUpFormValidator signUpFormValidator;      // 회원가입 검증
 
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
+
     /**
      * 로그인 페이지 이동
      * @return
      */
-    @GetMapping("/account/login")
+    @GetMapping("/login")
     public String loginForm() {
         return "account/login";
     }
@@ -58,32 +60,33 @@ public class AccountController {
         signUpFormValidator.validate(signUpForm, bindingResult);
         if (bindingResult.hasErrors()) return "account/sign-up";
 
-        accountService.signUp(signUpForm.getEmail(), signUpForm.getNickname(), signUpForm.getPassword());
+        Account newAccount = accountService.signUp(signUpForm.getEmail(), signUpForm.getNickname(), signUpForm.getPassword());
+        accountService.login(newAccount.getEmail(), newAccount.getPassword());
 
-        return "redirect:/boards";
+        return "redirect:/";
     }
 
     /**
      * 이메일 인증 처리
+     *  - 메시지로 보낸 인증 링크를 이메일에서 누르면 해당 핸들러를 요청
      * @param token
      * @param email
      * @param model
      * @return
      */
-    @GetMapping("/check-email-token")
+    @GetMapping("/account/check-email-token")
     public String checkEmailToken(String token, String email, Model model) {
-        // TODO - 이메일 인증 결과 페이지 필요. 메시지로 보낸 인증 링크를 이메일에서 누르면 해당 핸들러를 요청
         Account account = accountRepository.findByEmail(email);
 
         if (account == null) {
             // 이메일에 해당하는 계정 정보가 없을 경우
             model.addAttribute("error", "wrong.email");
-        } else if (!account.getEmailCheckToken().equals(token)) {
+        } else if (!account.isValidToken(token)) {
             // 입력한 토큰 값이 다른 경우
             model.addAttribute("error", "wrong.token");
         } else {
-            account.setEmailVerified(true);
-            account.setJoinedAt(LocalDateTime.now());
+            account.checkEmailSuccess();
+            accountService.login(account.getEmail(), account.getPassword());
             model.addAttribute("nickname", account.getNickname());
         }
 

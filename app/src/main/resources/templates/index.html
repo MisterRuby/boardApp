@@ -2,7 +2,6 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
 <head>
     <meta charset="UTF-8">
     <title>Board</title>
@@ -17,8 +16,9 @@
         로그인 상태 - 로그아웃
         비로그인 상태 - 로그인, 회원가입
     -->
-    <button th:onclick="|location.href='@{/account/login}'|">로그인</button>
-    <button th:onclick="|location.href='@{/account/sign-up}'|">회원가입</button>
+    <button th:onclick="|location.href='@{/login}'|" sec:authorize="!isAuthenticated()">로그인</button>
+    <button th:onclick="|location.href='@{/account/sign-up}'|" sec:authorize="!isAuthenticated()">회원가입</button>
+    <button th:onclick="|location.href='@{/logout}'|" sec:authorize="isAuthenticated()">로그아웃</button>
 
 </div>
 

@@ -12,7 +12,10 @@
 <body>
 <div class="top-nav">
     <a th:href="@{/}" class="home">Ruby's Board</a>
-    <button th:onclick="|location.href='@{/account/logout}'|" class="logout">로그아웃</button>
+    <button th:onclick="|location.href='@{/account/logout}'|" class="logout"
+            sec:authorize="isAuthenticated()">
+        로그아웃
+    </button>
 </div>
 
 <div class="container">

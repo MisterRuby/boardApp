@@ -6,8 +6,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static javax.persistence.FetchType.EAGER;
-
 /**
  * 계정 엔티티
  */
@@ -33,7 +31,6 @@ public class Account {
     private LocalDateTime joinedAt;                 // 가입일자 (인증 확인 시점)
 
 
-
     /** 비즈니스 메서드 */
 
     /**
@@ -42,5 +39,22 @@ public class Account {
      */
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
+    }
+
+    /**
+     * 이메일 인증 토큰 비교
+     * @param token
+     * @return
+     */
+    public boolean isValidToken(String token) {
+        return this.emailCheckToken.equals(token);
+    }
+
+    /**
+     * 이메일 인증 성공 처리
+     */
+    public void checkEmailSuccess() {
+        this.emailVerified = true;
+        this.joinedAt = LocalDateTime.now();
     }
 }

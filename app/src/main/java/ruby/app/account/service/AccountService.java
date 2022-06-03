@@ -24,7 +24,6 @@ public interface AccountService {
      * 로그인
      * @param email
      * @param password
-     * @return
      */
-    Optional<Account> login(String email, String password);
+    void login(String email, String password);
 }

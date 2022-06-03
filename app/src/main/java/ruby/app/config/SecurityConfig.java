@@ -2,11 +2,13 @@ package ruby.app.config;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
 
 @EnableWebSecurity
 public class SecurityConfig {
@@ -23,8 +25,23 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
+         http
                 .authorizeRequests()
-                .mvcMatchers("/*").permitAll().and().build();
+                .mvcMatchers("/boards/add", "/boards/{boardId}/edit").authenticated()
+                .mvcMatchers("/", "/login", "/logout", "/account/sign-up",
+                        "/account/check-email-token", "/account/password-reset",
+                        "/boards", "/boards/{boardId}").permitAll()
+                .anyRequest().authenticated();
+
+         return http.build();
+    }
+
+    /**
+     * PasswordEncoder Bean 등록
+     * @return
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

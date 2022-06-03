@@ -15,8 +15,9 @@
     <!-- 메인 페이지 이동 -->
     <a href="/">Ruby's Board</a>
     <div class="account">
-      <a th:href="@{/account/login}">로그인</a>
-      <a th:href="@{/account/sign-up}">회원가입</a>
+      <a th:href="@{/login}" sec:authorize="!isAuthenticated()">로그인</a>
+      <a th:href="@{/account/sign-up}" sec:authorize="!isAuthenticated()">회원가입</a>
+      <a th:href="@{/logout}" sec:authorize="isAuthenticated()">로그아웃</a>
     </div>
   </div>
 

@@ -27,7 +27,9 @@
         <a th:href="@{/account/sign-up}" sec:authorize="!isAuthenticated()">회원가입</a>
 
         <a th:href="@{/account}" sec:authorize="isAuthenticated()">내 계정</a>
-        <a th:href="@{/logout}" sec:authorize="isAuthenticated()">로그아웃</a>
+        <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+            <button type="submit">로그아웃</button>
+        </form>
     </div>
 </div>
 

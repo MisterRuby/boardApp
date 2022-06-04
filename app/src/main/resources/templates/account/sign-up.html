@@ -16,11 +16,15 @@
         <div class="field-error" th:errors="*{email}" />
         <label for="nickname">Nickname</label>
         <input type="text" id="nickname" th:field="*{nickname}" minlength="2" maxlength="20"
+               pattern="^[ㄱ-ㅎ가-힣a-zA-Z0-9_-]{2,20}$"
+               title="2~20자 한글, 영문 대소문자, 숫자만 입력할 수 있습니다."
                placeholder="nickname" required
                th:errorclass="field-error">
         <div class="field-error" th:errors="*{nickname}" />
         <label for="password">Password</label>
         <input type="password" id="password" th:field="*{password}" minlength="8" maxlength="50"
+               pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,50}$"
+               title="8~50자 영문, 숫자, 특수문자만 입력할 수 있습니다. 비밀번호는 적어도 하나 이상의 영문, 숫자, 특수문자를 모두 포함해야 합니다."
                placeholder="password" required
                th:errorclass="field-error">
         <div class="field-error" th:errors="*{password}" />
@@ -29,5 +33,4 @@
     </div>
   </section>
 </body>
-
 </html>

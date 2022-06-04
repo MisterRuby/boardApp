@@ -1,18 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:th="http://www.thymeleaf.org">
 
-<!--/*
-  email-verified-alert
-  TODO
-    - 해당 링크를 누르면 이메일 인증 토큰을 재생성해서 보내야 함.
-    - 토큰을 보낸 후 사용자에게 인증 토큰 재생성을 알림
-*/-->
 <div th:fragment="email-verified-alert"
         class="email-verified-alert" th:if="${account != null && !account.emailVerified}">
   회원가입을 완료하려면 <a th:href="@{/account/check-email}">계정 인증 이메일</a>을 확인하세요.
 </div>
-
 
 </html>

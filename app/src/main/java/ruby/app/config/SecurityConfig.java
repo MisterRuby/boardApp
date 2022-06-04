@@ -25,15 +25,23 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-         http
-                .authorizeRequests()
-                 .mvcMatchers("/boards/add").authenticated()            // /boards/{boardId} 에서 허용되어버리므로 별도로 막아줌
-                 .mvcMatchers("/", "/login", "/logout", "/account/sign-up",
-                         "/account/check-email-token", "/account/password-reset",
-                         "/boards", "/boards/{boardId}").permitAll()
-                 .anyRequest().authenticated();
 
-         return http.build();
+        http
+            .authorizeRequests()
+            .mvcMatchers("/boards/add").authenticated()            // /boards/{boardId} 에서 허용되어버리므로 별도로 막아줌
+            .mvcMatchers("/", "/account/sign-up",
+                 "/account/check-email-token", "/account/password-reset",
+                 "/boards", "/boards/{boardId}").permitAll()
+            .anyRequest().authenticated();
+
+        http.formLogin()                               // 스프링 시큐리티가 제공하는 기본 로그인 화면 사용
+                .loginPage("/login").permitAll();      // 가본 로그인 화면 x. 로그인 화면처리 핸들러 지정
+
+        http.logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/");                 // 로그아웃 처리 후 이동 페이지
+
+        return http.build();
     }
 
     /**

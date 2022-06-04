@@ -25,6 +25,10 @@ button {
   cursor: pointer;
 }
 
+button {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
 .field-error {
   border-color: #dc3545;
   color: #dc3545;

@@ -1,8 +1,7 @@
 package ruby.app.account.service;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import ruby.app.domain.Account;
-
-import java.util.Optional;
 
 /**
  * 계정 Service
@@ -10,7 +9,7 @@ import java.util.Optional;
  *  - 로그인
  *  -
  */
-public interface AccountService {
+public interface AccountService extends UserDetailsService {
 
     /**
      * 회원 가입

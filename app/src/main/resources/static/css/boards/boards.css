@@ -10,15 +10,25 @@
   justify-content: space-between;
 }
 
-.top-nav > a {
+.top-nav>a {
   font-size: 24px;
   font-weight: 600;
 }
 
-.account a{
+.account a,
+.account button {
   font-size: 18px;
-  font-weight: 300;
+  font-weight: 400;
   margin-right: 10px;
+}
+
+.account form {
+  display: inline-block;
+}
+
+.account form button {
+  border: none;
+  background-color: white;
 }
 
 /* container */

@@ -9,9 +9,15 @@
   <section>
     <div class="account">
       <h1>로그인</h1>
-      <form class="account-form" action="">
-        <input type="email" name="email" placeholder="email">
-        <input type="password" name="password" placeholder="password">
+      <form class="account-form" th:action="@{/login}" method="post">
+        <label for="email">Email</label>
+        <!--/* 스프링 시큐리티에서 username 으로 받으므로 name 값을 username 으로 설정 */-->
+        <input type="email" id="email" name="username" placeholder="email" required>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" minlength="8" maxlength="50"
+               pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,50}$"
+               title="8~50자 영문, 숫자, 특수문자만 입력할 수 있습니다. 비밀번호는 적어도 하나 이상의 영문, 숫자, 특수문자를 모두 포함해야 합니다."
+               placeholder="password" required>
         <input type="submit" value="로그인">
       </form>
       <div class="account-footer">
@@ -20,6 +26,7 @@
       </div>
     </div>
   </section>
+
 </body>
 
 </html>

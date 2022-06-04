@@ -10,6 +10,10 @@
   padding-right: 10px;
 }
 
+.top-nav form {
+  display: inline-block;
+}
+
 .top-nav button {
   border: none;
   background-color: #eee;

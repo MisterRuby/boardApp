@@ -9,6 +9,9 @@
   height: 50px;
   font-size: 24px;
   font-weight: 600;
+  display: flex;
+  justify-content: right;
+  align-items: center;
 }
 
 .top-nav .home {
@@ -17,14 +20,20 @@
   transform: translateX(-50%);
 }
 
-.top-nav .logout {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
+.top-nav form {
+  display: flex;
+  align-items: center;
+}
+
+.top-nav button {
+  /*position: absolute;*/
+  /*top: 50%;*/
+  /*right: 10px;*/
+  /*transform: translateY(-50%);*/
   border: none;
   background-color: white;
   font-size: 18px;
+  margin-right: 10px;
 }
 
 /* section */

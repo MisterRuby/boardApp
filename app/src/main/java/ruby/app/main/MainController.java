@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import ruby.app.account.form.LoginAccount;
+import ruby.app.account.form.LoginForm;
 import ruby.app.domain.Account;
 
 @Controller
@@ -23,17 +26,23 @@ public class MainController {
      * @return
      */
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm) {
         return "account/login";
     }
 
-    /**
-     * 로그아웃
-     * @return
-     */
-    @GetMapping("/logout")
-    public String logout() {
-        // TODO - 로그아웃 처리 후 메인 페이지 이동
-        return "redirect:/";
-    }
+//    @PostMapping("/login")
+//    public String login(@ModelAttribute("loginForm") LoginForm loginForm) {
+//        return "redirect:/";
+//    }
+
+
+//    /**
+//     * 로그아웃
+//     * @return
+//     */
+//    @GetMapping("/logout")
+//    public String logout() {
+//        // TODO - 로그아웃 처리 후 메인 페이지 이동
+//        return "redirect:/";
+//    }
 }

@@ -18,10 +18,9 @@
             sec:authorize="isAuthenticated()">
         내 계정
     </button>
-    <button th:if="${btn}" th:onclick="|location.href='@{/logout}'|" class="logout"
-            sec:authorize="isAuthenticated()">
-        로그아웃
-    </button>
+    <form th:if="${btn}" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+        <button type="submit">로그아웃</button>
+    </form>
 </div>
 
 

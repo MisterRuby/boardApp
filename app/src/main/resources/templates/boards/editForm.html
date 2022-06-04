@@ -2,24 +2,11 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
 
-<head>
-  <meta charset="UTF-8">
-  <title>Board</title>
-  <link rel="stylesheet" th:href="@{/css/boards/form.css}">
-  <link rel="icon" th:href="@{/img/rubyImg.jpeg}">
-  <!-- 클래식 에디터 -->
-  <script src="https://cdn.ckeditor.com/ckeditor5/29.1.0/classic/ckeditor.js"></script>
-</head>
+<head th:replace="~{/boards/fragments :: editHead ('form')}"></head>
 
 <body>
 
-  <div class="top-nav">
-    <!-- 메인 페이지 이동 -->
-    <a th:href="@{/}">Ruby's Board</a>
-    <div class="account">
-      <a th:href="@{/}">로그아웃</a>
-    </div>
-  </div>
+  <div th:replace="~{/boards/fragments :: form-top-nav}"></div>
 
   <!-- 제목, 글 내용 입력 -->
   <div class="container">

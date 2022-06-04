@@ -1,23 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Board</title>
-    <link rel="stylesheet" th:href="@{/css/account/account.css}">
-    <link rel="icon" th:href="@{/img/rubyImg.jpeg}">
-</head>
+<head th:replace="~{/account/fragments :: head}"></head>
+
 <body>
-<div class="top-nav">
-    <a th:href="@{/}" class="home">Ruby's Board</a>
-    <button th:onclick="|location.href='@{/account/logout}'|" class="logout"
-            sec:authorize="isAuthenticated()">
-        로그아웃
-    </button>
-</div>
 
+<div th:replace="~{/account/fragments :: top-nav (true)}"></div>
 <div class="container">
     <h2>이메일 확인</h2>
     <p th:if="${error}">이메일 확인 링크가 정확하지 않습니다.</p>

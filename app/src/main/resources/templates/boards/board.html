@@ -3,24 +3,10 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>
-  <meta charset="UTF-8">
-  <title>Board</title>
-  <link rel="stylesheet" th:href="@{/css/boards/board.css}">
-  <link rel="icon" th:href="@{/img/rubyImg.jpeg}">
-</head>
+<head th:replace="~{/boards/fragments :: head ('board')}"></head>
 
 <body>
-  <div class="top-nav">
-    <!-- 메인 페이지 이동 -->
-    <a th:href="@{/}">Ruby's Board</a>
-    <div class="account">
-      <a th:href="@{/login}" sec:authorize="!isAuthenticated()">로그인</a>
-      <a th:href="@{/account/sign-up}" sec:authorize="!isAuthenticated()">회원가입</a>
-      <a th:href="@{/login}" sec:authorize="isAuthenticated()">로그아웃</a>
-    </div>
-  </div>
-
+  <div th:replace="~{/boards/fragments :: board-top-nav}"></div>
   <div class="container">
     <div class="board">
       <!-- 작성자 닉네임, 작성일자, 추천수, 조회수-->

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- head -->
+<head th:fragment="head (css)">
+    <meta charset="UTF-8">
+    <title>Board</title>
+    <link rel="stylesheet" th:href="|@{/css/boards/}${css}.css|">
+</head>
+
+<head th:fragment="editHead (css)">
+    <meta charset="UTF-8">
+    <title>Board</title>
+    <link rel="stylesheet" th:href="|@{/css/boards/}${css}.css|">
+    <script src="https://cdn.ckeditor.com/ckeditor5/29.1.0/classic/ckeditor.js"></script>
+</head>
+
+
+<!-- nav -->
+<div th:fragment="board-top-nav" class="top-nav">
+    <!-- 메인 페이지 이동 -->
+    <a th:href="@{/}">Ruby's Board</a>
+    <div class="account">
+        <a th:href="@{/login}" sec:authorize="!isAuthenticated()">로그인</a>
+        <a th:href="@{/account/sign-up}" sec:authorize="!isAuthenticated()">회원가입</a>
+        <a th:href="@{/login}" sec:authorize="isAuthenticated()">로그아웃</a>
+    </div>
+</div>
+
+<div th:fragment="form-top-nav" class="top-nav">
+    <!-- 메인 페이지 이동 -->
+    <a th:href="@{/}">Ruby's Board</a>
+    <div class="account">
+        <a th:href="@{/}">로그아웃</a>
+    </div>
+</div>
+
+</html>

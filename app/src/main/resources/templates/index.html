@@ -9,9 +9,12 @@
 </head>
 <body>
 <div class="top-nav">
-
+    <!--/* 로그인 상태 x */-->
     <button th:onclick="|location.href='@{/login}'|" sec:authorize="!isAuthenticated()">로그인</button>
     <button th:onclick="|location.href='@{/account/sign-up}'|" sec:authorize="!isAuthenticated()">회원가입</button>
+
+    <!--/* 로그인 상태 o */-->
+    <button th:onclick="|location.href='@{/account}'|" sec:authorize="isAuthenticated()">내 계정</button>
     <button th:onclick="|location.href='@{/logout}'|" sec:authorize="isAuthenticated()">로그아웃</button>
 
 </div>

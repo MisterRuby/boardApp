@@ -26,4 +26,10 @@ public interface AccountService {
      * @param password
      */
     void login(String email, String password);
+
+    /**
+     * 회원 가입 인증 이메일 전송
+     * @param account
+     */
+    void sendSignUpConfirmEmail(Account account);
 }

@@ -81,3 +81,13 @@ section {
   transform: translateX(-50%) translateY(-50%);
   text-align: center;
 }
+
+.email-request {
+  height: 40px;
+  line-height: 30px;
+  padding: 5px 10px;
+  font-size: 20px;
+  color: crimson;
+  border: 1px solid crimson;
+  border-radius: 5px;
+}

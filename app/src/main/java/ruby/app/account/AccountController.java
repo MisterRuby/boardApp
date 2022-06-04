@@ -6,9 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import ruby.app.account.form.LoginAccount;
 import ruby.app.account.form.SignUpForm;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
@@ -18,6 +17,7 @@ import ruby.app.domain.Account;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/account")
 public class AccountController {
 
     private final AccountRepository accountRepository;
@@ -25,19 +25,24 @@ public class AccountController {
     private final SignUpFormValidator signUpFormValidator;      // 회원가입 검증
 
     /**
-     * 로그인 페이지 이동
+     * 계정 정보 조회
+     * @param account
+     * @param model
      * @return
      */
-    @GetMapping("/login")
-    public String loginForm() {
-        return "account/login";
+    @GetMapping
+    public String accountForm(@LoginAccount Account account, Model model) {
+        model.addAttribute("account", account);
+        return "account/info";
     }
+
+
 
     /**
      * 회원가입 페이지 이동
      * @return
      */
-    @GetMapping("/account/sign-up")
+    @GetMapping("/sign-up")
     public String signUpForm(@ModelAttribute("signUpForm") SignUpForm signUpForm) {
         return "account/sign-up";
     }
@@ -46,7 +51,7 @@ public class AccountController {
      * 회원가입
      * @return
      */
-    @PostMapping("/account/sign-up")
+    @PostMapping("/sign-up")
     public String signUp(@Validated @ModelAttribute("signUpForm") SignUpForm signUpForm, BindingResult bindingResult) {
         // 필드 검증
         if (bindingResult.hasErrors()) return "account/sign-up";
@@ -69,7 +74,7 @@ public class AccountController {
      * @param model
      * @return
      */
-    @GetMapping("/account/check-email-token")
+    @GetMapping("/check-email-token")
     public String checkEmailToken(String token, String email, Model model) {
         Account account = accountRepository.findByEmail(email);
 
@@ -88,13 +93,36 @@ public class AccountController {
         return "account/checked-email";
     }
 
+    /**
+     * 이메일 인증 재전송 페이지 이동
+     * @param account
+     * @param model
+     * @return
+     */
+    @GetMapping("/check-email")
+    public String checkEmailForm(@LoginAccount Account account, Model model) {
+        model.addAttribute("email", account.getEmail());
+        return "/account/check-email";
+    }
+
+    /**
+     * 이메일 인증 재전송 요청
+     * @param account
+     * @return
+     */
+    @GetMapping("/resend-confirm-email")
+    @ResponseBody
+    public void resendConfirmEmail(@LoginAccount Account account) {
+        accountService.sendSignUpConfirmEmail(account);
+    }
+
 
 
     /**
      * 비밀번호 변경 페이지 이동
      * @return
      */
-    @GetMapping("/account/password-reset")
+    @GetMapping("/password-reset")
     public String passwordResetForm() {
         return "account/password-reset";
     }

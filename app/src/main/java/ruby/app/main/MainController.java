@@ -17,4 +17,23 @@ public class MainController {
 
         return "index";
     }
+
+    /**
+     * 로그인 페이지 이동
+     * @return
+     */
+    @GetMapping("/login")
+    public String loginForm() {
+        return "account/login";
+    }
+
+    /**
+     * 로그아웃
+     * @return
+     */
+    @GetMapping("/logout")
+    public String logout() {
+        // TODO - 로그아웃 처리 후 메인 페이지 이동
+        return "redirect:/";
+    }
 }

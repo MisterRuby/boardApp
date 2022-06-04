@@ -59,6 +59,22 @@ public class AccountServiceImpl implements AccountService {
     }
 
     /**
+     * 회원 가입 인증 이메일 전송
+     * @param account
+     */
+    @Override
+    public void sendSignUpConfirmEmail(Account account) {
+        String token = account.getEmailCheckToken();
+        String email = account.getEmail();
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(account.getEmail());                                            // 메일을 보낼 대상 이메일 주소
+        mailMessage.setSubject("Ruby's Board, 회원 가입 인증");                                  // 메일 제목
+        mailMessage.setText("/account/check-email-token?token=" + token + "&email=" + email);        // 메일 본문
+        mailSender.send(mailMessage);
+    }
+
+    /**
      * 신규 계정 정보 저장
      * @param email
      * @param nickname
@@ -73,20 +89,5 @@ public class AccountServiceImpl implements AccountService {
                 .build();
 
         return accountRepository.save(account);
-    }
-
-    /**
-     * 회원 가입 인증 이메일 전송
-     * @param newAccount
-     */
-    private void sendSignUpConfirmEmail(Account newAccount) {
-        String token = newAccount.getEmailCheckToken();
-        String email = newAccount.getEmail();
-
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newAccount.getEmail());                                            // 메일을 보낼 대상 이메일 주소
-        mailMessage.setSubject("Ruby's Board, 회원 가입 인증");                                  // 메일 제목
-        mailMessage.setText("/account/check-email-token?token=" + token + "&email=" + email);        // 메일 본문
-        mailSender.send(mailMessage);
     }
 }

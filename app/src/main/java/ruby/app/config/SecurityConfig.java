@@ -27,11 +27,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
          http
                 .authorizeRequests()
-                .mvcMatchers("/boards/add", "/boards/{boardId}/edit").authenticated()
-                .mvcMatchers("/", "/login", "/logout", "/account/sign-up",
-                        "/account/check-email-token", "/account/password-reset",
-                        "/boards", "/boards/{boardId}").permitAll()
-                .anyRequest().authenticated();
+                 .mvcMatchers("/boards/add").authenticated()            // /boards/{boardId} 에서 허용되어버리므로 별도로 막아줌
+                 .mvcMatchers("/", "/login", "/logout", "/account/sign-up",
+                         "/account/check-email-token", "/account/password-reset",
+                         "/boards", "/boards/{boardId}").permitAll()
+                 .anyRequest().authenticated();
 
          return http.build();
     }

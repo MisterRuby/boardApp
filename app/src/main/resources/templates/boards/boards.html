@@ -7,9 +7,11 @@
 
 <body>
   <div th:replace="~{/boards/fragments :: board-top-nav}"></div>
+  <div th:replace="~{/fragments :: email-verified-alert}"></div>
   <div class="container">
     <div class="boards-nav">
       <h2 class="title">Board</h2>
+      <!--/* TODO - 이메일 인증을 하지 않은 사용자가 글쓰기 버튼을 눌렀을 때 인증 알림을 해줘야 함(이벤트를 걸어줘야 함) */-->
       <a th:href="@{/boards/add}">글쓰기</a>
     </div>
 

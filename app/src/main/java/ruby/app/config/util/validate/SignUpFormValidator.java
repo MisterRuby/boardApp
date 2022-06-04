@@ -1,4 +1,4 @@
-package ruby.app.account.util.validate;
+package ruby.app.config.util.validate;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

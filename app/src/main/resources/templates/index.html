@@ -9,12 +9,7 @@
 </head>
 <body>
 <div class="top-nav">
-    <!--
-        TODO
-        로그인 상태에 따라 버튼 종류가 달라져야 함
-        로그인 상태 - 로그아웃
-        비로그인 상태 - 로그인, 회원가입
-    -->
+
     <button th:onclick="|location.href='@{/login}'|" sec:authorize="!isAuthenticated()">로그인</button>
     <button th:onclick="|location.href='@{/account/sign-up}'|" sec:authorize="!isAuthenticated()">회원가입</button>
     <button th:onclick="|location.href='@{/logout}'|" sec:authorize="isAuthenticated()">로그아웃</button>

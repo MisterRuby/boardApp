@@ -29,3 +29,14 @@ button {
   border-color: #dc3545;
   color: #dc3545;
 }
+
+.email-verified-alert {
+  line-height: 50px;
+  height: 50px;
+  text-align: center;
+  background-color: antiquewhite;
+}
+
+.email-verified-alert a {
+  font-weight: 500;
+}

@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ruby.app.account.form.UserAccount;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
 import ruby.app.domain.Account;
@@ -46,15 +47,16 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public void login(String email, String password) {
+        Account account = accountRepository.findByEmail(email);
+
+        // UsernamePasswordAuthenticationToken 에서 첫번째 인자로 지정한 값이 principal 객체가 된다.
+        // 해당 클래스의 생성자 메서드 참고해서 볼 것
         UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(email, password, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                new UsernamePasswordAuthenticationToken(
+                        new UserAccount(account), password, List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
         SecurityContextHolder.getContext().setAuthentication(token);
     }
-
-
-
-
 
     /**
      * 신규 계정 정보 저장

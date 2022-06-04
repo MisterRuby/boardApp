@@ -1,9 +1,12 @@
 package ruby.app.boards;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ruby.app.account.form.LoginAccount;
+import ruby.app.domain.Account;
 
 @Controller
 @RequestMapping("/boards")
@@ -14,7 +17,8 @@ public class BoardController {
      * @return
      */
     @GetMapping
-    public String boards() {
+    public String boards(@LoginAccount Account account, Model model) {
+        if (account != null) model.addAttribute(account);
         return "/boards/boards";
     }
 
@@ -23,7 +27,8 @@ public class BoardController {
      * @return
      */
     @GetMapping("/{boardId}")
-    public String board(@PathVariable Long boardId) {
+    public String board(@PathVariable Long boardId, @LoginAccount Account account, Model model) {
+        if (account != null) model.addAttribute(account);
         return "/boards/board";
     }
 

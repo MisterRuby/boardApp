@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ruby.app.account.form.SignUpForm;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
-import ruby.app.account.util.validate.SignUpFormValidator;
+import ruby.app.config.util.validate.SignUpFormValidator;
 import ruby.app.domain.Account;
 
 @Slf4j
@@ -23,11 +23,6 @@ public class AccountController {
     private final AccountRepository accountRepository;
     private final AccountService accountService;                // 계정 서비스
     private final SignUpFormValidator signUpFormValidator;      // 회원가입 검증
-
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
 
     /**
      * 로그인 페이지 이동

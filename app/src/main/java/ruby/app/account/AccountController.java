@@ -14,6 +14,8 @@ import ruby.app.account.service.AccountService;
 import ruby.app.config.util.validate.SignUpFormValidator;
 import ruby.app.domain.Account;
 
+import java.util.Optional;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -30,13 +32,20 @@ public class AccountController {
      * @param model
      * @return
      */
-    @GetMapping
-    public String accountForm(@LoginAccount Account account, Model model) {
-        model.addAttribute("account", account);
-        return "account/info";
+    @GetMapping("/{accountId}")
+    public String accountForm(@PathVariable Long accountId, @LoginAccount Account account, Model model) {
+        Optional<Account> accountOptional = accountRepository.findById(accountId);
+
+        if (accountOptional.isEmpty()) {
+            throw new IllegalArgumentException(accountId + "에 해당하는 사용자가 없습니다.");
+        }
+
+//        model.addAttribute("account", accountOptional.get());
+        model.addAttribute(accountOptional.get());      // 생략할 경우 매개변수의 객체 타입명의 캐멀케이스 문자열 값이 키 값이 된다.
+        model.addAttribute("isOwner", account.equals(accountOptional.get()));
+
+        return "account/profile";
     }
-
-
 
     /**
      * 회원가입 페이지 이동
@@ -101,7 +110,7 @@ public class AccountController {
      */
     @GetMapping("/check-email")
     public String checkEmailForm(@LoginAccount Account account, Model model) {
-        model.addAttribute("email", account.getEmail());
+        model.addAttribute("account", account);
         return "/account/check-email";
     }
 

@@ -11,8 +11,7 @@
   <div class="container">
     <div class="boards-nav">
       <h2 class="title">Board</h2>
-      <!--/* TODO - 이메일 인증을 하지 않은 사용자가 글쓰기 버튼을 눌렀을 때 인증 알림을 해줘야 함(이벤트를 걸어줘야 함) */-->
-      <a th:href="@{/boards/add}">글쓰기</a>
+      <a th:href="@{/boards/add}" sec:authorize="isAuthenticated()">글쓰기</a>
     </div>
 
     <div class="boards">
@@ -20,7 +19,7 @@
         <!-- 글번호, 제목, 댓글수, 추천수, 조회수, 작성자 닉네임, 작성일자 -->
         <div class="board-left">
           <p class="no">10412</p>
-          <!-- board 로 넘어가야함 -->
+          <!-- TODO - board 로 넘어가야함 -->
           <a th:href="@{/boards/1}">글 제목입니다.</a>
         </div>
         <div class="board-right">
@@ -30,6 +29,7 @@
             <span>조회수 10</span>
           </div>
           <div class="board-right-bottom">
+            <!-- TODO - 작성자 클릭 시 작성자의 프로필 조회 화면으로 이동 -->
             <span>작성자 : Ruby</span>
             <span>작성일 : 2022-05-31</span>
           </div>
@@ -54,11 +54,6 @@
       <a href="#">&gt;&gt;</a>
     </div>
   </div>
-
-
-  <script>
-
-  </script>
 </body>
 
 </html>

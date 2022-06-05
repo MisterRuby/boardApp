@@ -19,6 +19,8 @@ public class QAccount extends EntityPathBase<Account> {
 
     public static final QAccount account = new QAccount("account");
 
+    public final StringPath bio = createString("bio");
+
     public final StringPath email = createString("email");
 
     public final StringPath emailCheckToken = createString("emailCheckToken");
@@ -32,6 +34,8 @@ public class QAccount extends EntityPathBase<Account> {
     public final StringPath nickname = createString("nickname");
 
     public final StringPath password = createString("password");
+
+    public final StringPath profileImage = createString("profileImage");
 
     public QAccount(String variable) {
         super(Account.class, forVariable(variable));

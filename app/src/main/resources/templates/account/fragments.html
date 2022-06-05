@@ -14,7 +14,7 @@
 <div th:fragment="top-nav (btn)" class="top-nav">
     <a th:href="@{/}" class="home">Ruby's Board</a>
 
-    <button th:if="${btn}" th:onclick="|location.href='@{/account/info}'|" class="logout"
+    <button th:if="${btn}" th:onclick="|location.href='@{/account}/${account.id}'|"
             sec:authorize="isAuthenticated()">
         내 계정
     </button>

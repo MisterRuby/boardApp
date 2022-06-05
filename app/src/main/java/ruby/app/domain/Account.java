@@ -29,6 +29,9 @@ public class Account {
     private boolean emailVerified;                  // email 인증 여부
     private String emailCheckToken;                 // email 인증 시 사용할 토큰 값
     private LocalDateTime joinedAt;                 // 가입일자 (인증 확인 시점)
+    private String bio;                             // 자기소개
+    @Lob @Basic(fetch = FetchType.EAGER)
+    private String profileImage;                    // 프로필 이미지
 
 
     /** 비즈니스 메서드 */

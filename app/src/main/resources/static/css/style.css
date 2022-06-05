@@ -12,6 +12,8 @@ body {
   font-weight: 300;
   background-color: #eee;
   font-size: 15px;
+  min-width: 1000px;
+  min-height: 600px;
 }
 
 a {

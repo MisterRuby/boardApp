@@ -30,19 +30,4 @@ public class MainController {
         return "account/login";
     }
 
-//    @PostMapping("/login")
-//    public String login(@ModelAttribute("loginForm") LoginForm loginForm) {
-//        return "redirect:/";
-//    }
-
-
-//    /**
-//     * 로그아웃
-//     * @return
-//     */
-//    @GetMapping("/logout")
-//    public String logout() {
-//        // TODO - 로그아웃 처리 후 메인 페이지 이동
-//        return "redirect:/";
-//    }
 }

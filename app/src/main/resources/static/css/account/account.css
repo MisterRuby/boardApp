@@ -71,8 +71,13 @@ section {
   border-radius: 5px;
 }
 
+.account-form #rememberMe {
+  display: inline-block;
+  width: fit-content;
+}
+
 .account-form input:last-child {
-  margin-top: 40px;
+  margin-top: 20px;
   background-color: crimson;
   border: none;
   color: #eee;

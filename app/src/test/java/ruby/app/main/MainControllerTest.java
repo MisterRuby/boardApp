@@ -1,7 +1,9 @@
 package ruby.app.main;
 
-import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -71,7 +73,7 @@ class MainControllerTest {
                 .andExpect(redirectedUrl("/"))
                 .andExpect(authenticated().withUsername("ruby@naver.com"));
     }
-    
+
     @Test
     @DisplayName("로그아웃")
     @WithMockUser

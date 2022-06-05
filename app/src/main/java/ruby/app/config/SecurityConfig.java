@@ -1,17 +1,29 @@
 package ruby.app.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import ruby.app.account.service.AccountService;
+
+import javax.sql.DataSource;
 
 
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final UserDetailsService userDetailsService;
+
+    private final DataSource dataSource;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -44,6 +56,10 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/");                 // 로그아웃 처리 후 이동 페이지
 
+        http.rememberMe()
+                .userDetailsService(userDetailsService)
+                .tokenRepository(tokenRepository());
+
         return http.build();
     }
 
@@ -54,5 +70,18 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    /**
+     * RememberMe 에 사용되는 repository 를 빈으로 등록
+     *  - db에 접근하고 토큰 관련 정보를 저장하고 사용하기 위해 repository 가 대상으로 하는 테이블을 생성해줘야 한다.
+     *      - jpa 의 경우 엔티티 필요
+     * @return
+     */
+    @Bean
+    public PersistentTokenRepository tokenRepository() {
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource(dataSource);
+        return jdbcTokenRepository;
     }
 }

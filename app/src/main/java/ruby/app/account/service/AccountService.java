@@ -9,7 +9,7 @@ import ruby.app.domain.Account;
  *  - 로그인
  *  -
  */
-public interface AccountService extends UserDetailsService {
+public interface AccountService {
 
     /**
      * 회원 가입

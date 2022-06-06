@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/account/fragments :: head}"></head>
+
+<body>
+<div th:replace="~{/account/fragments :: top-nav (false)}"></div>
+<div th:replace="~{/fragments :: email-verified-alert}"></div>
+
+<form class="profile-edit-form" th:action th:object="${profileForm}" th:method="post">
+
+    <div class="profile-edit-imgDiv">
+        <img id="profile-img" th:if="${#strings.isEmpty(account.profileImage)}" style="background-color: #ffffff;"/>
+        <img id="profile-img" th:if="${!#strings.isEmpty(account.profileImage)}" th:src="*{profileImage}" />
+        <label for="profile-img-input">이미지 변경</label>
+        <input id="profile-img-input" type="file" hidden/>
+        <input id="profileImage" name="profileImage" type="text" hidden/>
+    </div>
+
+    <div class="profile-edit">
+        <h1 class="nickname" th:text="${account.nickname}"></h1>
+        <label>한 줄 소개</label>
+        <input type="text" name="bio" th:value="*{bio}"
+               maxlength="50" title="50자 이내로 입력해주세요."/>
+        <input type="submit" value="변경하기"/>
+    </div>
+</form>
+
+<script type="application/javascript">
+    const inputImage = document.getElementById("profile-img-input");
+    const profileImage = document.getElementById("profileImage");
+    const readImage = (input) => {
+        // 인풋 태그에 파일이 있는 경우
+        if(input.files && input.files[0]) {
+            // 이미지 파일인지 검사 (생략)
+            // FileReader 인스턴스 생성
+            const reader = new FileReader();
+            // 이미지가 로드가 된 경우
+            reader.onload = e => {
+                const previewImage = document.getElementById("profile-img");
+                previewImage.src = e.target.result;
+                profileImage.setAttribute("value", e.target.result);
+            }
+
+            // reader가 이미지 읽도록 하기
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    // input file에 change 이벤트 부여
+    inputImage.addEventListener("change", e => {
+        readImage(e.target);
+    })
+</script>
+
+</body>
+
+</html>

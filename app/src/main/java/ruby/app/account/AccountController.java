@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ruby.app.account.form.LoginAccount;
+import ruby.app.account.form.ProfileForm;
 import ruby.app.account.form.SignUpForm;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
@@ -25,27 +26,6 @@ public class AccountController {
     private final AccountRepository accountRepository;
     private final AccountService accountService;                // 계정 서비스
     private final SignUpFormValidator signUpFormValidator;      // 회원가입 검증
-
-    /**
-     * 계정 정보 조회
-     * @param account
-     * @param model
-     * @return
-     */
-    @GetMapping("/{accountId}")
-    public String accountForm(@PathVariable Long accountId, @LoginAccount Account account, Model model) {
-        Optional<Account> accountOptional = accountRepository.findById(accountId);
-
-        if (accountOptional.isEmpty()) {
-            throw new IllegalArgumentException(accountId + "에 해당하는 사용자가 없습니다.");
-        }
-
-//        model.addAttribute("account", accountOptional.get());
-        model.addAttribute(accountOptional.get());      // 생략할 경우 매개변수의 객체 타입명의 캐멀케이스 문자열 값이 키 값이 된다.
-        model.addAttribute("isOwner", account.equals(accountOptional.get()));
-
-        return "account/profile";
-    }
 
     /**
      * 회원가입 페이지 이동
@@ -94,9 +74,8 @@ public class AccountController {
             // 입력한 토큰 값이 다른 경우
             model.addAttribute("error", "wrong.token");
         } else {
-            account.checkEmailSuccess();
-            accountService.login(account.getEmail(), account.getPassword());
-            model.addAttribute("nickname", account.getNickname());
+            accountService.completeCheckEmail(account);
+            model.addAttribute(account);
         }
 
         return "account/checked-email";
@@ -126,7 +105,6 @@ public class AccountController {
     }
 
 
-
     /**
      * 비밀번호 변경 페이지 이동
      * @return
@@ -134,5 +112,59 @@ public class AccountController {
     @GetMapping("/password-reset")
     public String passwordResetForm() {
         return "account/password-reset";
+    }
+
+    /**
+     * 계정 정보 조회
+     * @param account
+     * @param model
+     * @return
+     */
+    @GetMapping("/{accountId}")
+    public String accountForm(@PathVariable Long accountId, @LoginAccount Account account, Model model) {
+        Optional<Account> accountOptional = accountRepository.findById(accountId);
+
+        if (accountOptional.isEmpty()) {
+            throw new IllegalArgumentException(accountId + "에 해당하는 사용자가 없습니다.");
+        }
+
+//        model.addAttribute("account", accountOptional.get());
+        model.addAttribute(accountOptional.get());      // 생략할 경우 매개변수의 객체 타입명의 캐멀케이스 문자열 값이 키 값이 된다.
+        model.addAttribute("isOwner", account.equals(accountOptional.get()));
+
+        return "account/profile";
+    }
+
+    /**
+     * 프로필 수정 페이지 이동
+     * @param account
+     * @param model
+     * @return
+     */
+    @GetMapping("/profile")
+    public String editProfileForm(@LoginAccount Account account, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(new ProfileForm(account));
+        return "account/editProfile";
+    }
+
+    /**
+     * 프로필 수정
+     * @param account
+     * @param profileForm
+     * @param bindingResult
+     * @param model
+     * @return
+     */
+    @PostMapping("/profile")
+    public String editProfile(@LoginAccount Account account, @Validated ProfileForm profileForm, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute(account);
+            return "account/editProfile";
+        }
+
+        accountService.updateProfile(account, profileForm.getProfileImage(), profileForm.getBio());
+
+        return "redirect:/account/" + account.getId();
     }
 }

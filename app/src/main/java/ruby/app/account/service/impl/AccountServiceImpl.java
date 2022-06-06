@@ -6,17 +6,18 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ruby.app.account.form.ProfileForm;
 import ruby.app.account.form.UserAccount;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
 import ruby.app.domain.Account;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +49,7 @@ public class AccountServiceImpl implements AccountService {
      * @param password
      */
     @Override
+    @Transactional(readOnly = true)
     public void login(String email, String password) {
         Account account = accountRepository.findByEmail(email);
 
@@ -65,6 +67,7 @@ public class AccountServiceImpl implements AccountService {
      * @param account
      */
     @Override
+    @Transactional(readOnly = true)
     public void sendSignUpConfirmEmail(Account account) {
         String token = account.getEmailCheckToken();
         String email = account.getEmail();
@@ -74,6 +77,37 @@ public class AccountServiceImpl implements AccountService {
         mailMessage.setSubject("Ruby's Board, 회원 가입 인증");                                  // 메일 제목
         mailMessage.setText("/account/check-email-token?token=" + token + "&email=" + email);        // 메일 본문
         mailSender.send(mailMessage);
+    }
+
+    /**
+     * 이메일 인증 완료처리
+     * @param account
+     */
+    @Override
+    public void completeCheckEmail(Account account) {
+        account.checkEmailSuccess();
+        login(account.getEmail(), account.getPassword());
+    }
+
+
+    /**
+     * 프로필 변경
+     * @param account
+     * @param profileImage
+     * @param bio
+     */
+    @Override
+    public void updateProfile(Account account, String profileImage, String bio) {
+
+        // TODO - 이미지의 경우 실제 이미지 파일도 저장 되어야 함
+        if (profileImage != null && !profileImage.isBlank()) account.setProfileImage(profileImage);
+        if (bio != null && !bio.isBlank()) account.setBio(bio);
+
+        /*
+             account 는 세션에 저장된 객체로 이미 한 번 조회했지만 엔티티 매니저가 관리하지 않는 준영속(detach) 상태의 엔티티다.
+             - 준영속 엔티티는 변경감지는 일어나지 않지만 save 를 통해 변경된 내용을 DB에 업데이트 할 수 있다. (id 값이 있기 때문에)
+        */
+        accountRepository.save(account);
     }
 
     /**
@@ -92,4 +126,6 @@ public class AccountServiceImpl implements AccountService {
 
         return accountRepository.save(account);
     }
+
+
 }

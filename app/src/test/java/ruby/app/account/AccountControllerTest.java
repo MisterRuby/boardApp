@@ -12,11 +12,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
 import ruby.app.domain.Account;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.any;
@@ -239,22 +243,46 @@ class AccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/checked-email"))
                 .andExpect(model().attributeDoesNotExist("error"))
-                .andExpect(model().attributeExists("nickname"))
+                .andExpect(model().attributeExists("account"))
                 .andExpect(authenticated());
     }
 
+    @Test
+    @DisplayName("프로필 자기 소개 50자 초과")
+    @WithUserDetails(value = "ruby@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    void updateProfileOverLengthBio() throws Exception {
+        mockMvc.perform(post("/account/profile")
+                        .param("bio",
+                                "내 소개 수정adsadgajsdhjasbdjashvfhjwvfadsahdjavfjhavfhjsavdhjasvdhjasdfngjk" +
+                                        "desahvjhdahvfhjdsvfjhasvdhjavsdjhadiugquwiebdjhasd bhjbashdvavdavdhasdja")
+                        .with(csrf()))
+//                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("account/editProfile"));
+    }
 
 
     @Test
-    @DisplayName("로그인 화면 테스트")
-    void loginForm() {
+    @DisplayName("프로필 수정")
+    @WithUserDetails(value = "ruby@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    void updateProfile() throws Exception {
+        // 실제 DB에 저장된 account 의 정보를 수정하는 테스트임으로 @WithUserDetails 로 접속 account 를 설정해주어야 한다.
+        Account account = accountRepository.findByEmail("ruby@naver.com");
 
+        mockMvc.perform(post("/account/profile")
+                        .param("bio", "내 소개 수정")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/account/" + account.getId()));
     }
+
+
+
+
 
     @Test
     @DisplayName("비밀번호 변경 화면 테스트")
     void passwordResetForm() {
 
     }
-
 }

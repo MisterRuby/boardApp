@@ -10,9 +10,9 @@
 <div class="container">
     <h2>이메일 확인</h2>
     <p th:if="${error}">이메일 확인 링크가 정확하지 않습니다.</p>
-    <h2 th:if="${error == null}">
+    <h2 th:if="${#strings.isEmpty(error)}">
         이메일 인증에 성공하였습니다.
-        <span th:text="${nickname}"></span>님의 가입을 환영합니다.
+        <span th:text="${account.nickname}"></span>님의 가입을 환영합니다.
     </h2>
 </div>
 

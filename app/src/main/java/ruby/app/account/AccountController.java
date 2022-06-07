@@ -2,6 +2,7 @@ package ruby.app.account;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,7 @@ public class AccountController {
     private final AccountService accountService;                            // 계정 서비스
     private final SignUpFormValidator signUpFormValidator;                  // 회원가입 검증
     private final PasswordResetFormValidator passwordResetFormValidator;    // 비밀번호 변경 검증
+    private final ModelMapper modelMapper;                                   // ModelMapper
 
     /**
      * 회원가입 페이지 이동
@@ -137,7 +139,8 @@ public class AccountController {
     @GetMapping("/profile")
     public String editProfileForm(@LoginAccount Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(new ProfileForm(account));
+//        model.addAttribute(new ProfileForm(account));
+        model.addAttribute(modelMapper.map(account, ProfileForm.class));
         return "account/editProfile";
     }
 
@@ -156,7 +159,8 @@ public class AccountController {
             return "account/editProfile";
         }
 
-        accountService.updateProfile(account, profileForm.getProfileImage(), profileForm.getBio());
+        modelMapper.map(profileForm, account);
+        accountService.updateProfile(account);
 
         return "redirect:/account/" + account.getId();
     }

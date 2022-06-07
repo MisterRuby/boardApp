@@ -41,10 +41,8 @@ public interface AccountService {
     /**
      * 프로필 변경
      * @param account
-     * @param profileImage
-     * @param bio
      */
-    void updateProfile(Account account, String profileImage, String bio);
+    void updateProfile(Account account);
 
     /**
      * 비밀번호 변경

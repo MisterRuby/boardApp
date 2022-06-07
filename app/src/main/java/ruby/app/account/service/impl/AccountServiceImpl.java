@@ -90,13 +90,11 @@ public class AccountServiceImpl implements AccountService {
     /**
      * 프로필 변경
      * @param account
-     * @param profileImage
-     * @param bio
      */
     @Override
-    public void updateProfile(Account account, String profileImage, String bio) {
-        if (profileImage != null && !profileImage.isBlank()) account.setProfileImage(profileImage);
-        if (bio != null && !bio.isBlank()) account.setBio(bio);
+    public void updateProfile(Account account) {
+//        if (profileImage != null && !profileImage.isBlank()) account.setProfileImage(profileImage);
+//        if (bio != null && !bio.isBlank()) account.setBio(bio);
 
         /*
              account 는 세션에 저장된 객체로 이미 한 번 조회했지만 엔티티 매니저가 관리하지 않는 준영속(detach) 상태의 엔티티다.

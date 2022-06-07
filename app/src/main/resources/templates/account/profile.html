@@ -15,7 +15,7 @@
     <div class="profile-account">
         <span class="nickname" th:text="${account.nickname}"></span>
         <button class="profile-edit-btn" th:if="${isOwner}" th:onclick="|location.href='@{/account/profile}'|">프로필 수정</button>
-        <button class="password-edit-btn" th:if="${isOwner}" th:onclick="|location.href='@{/account/password}'|">비밀번호 변경</button>
+        <button class="password-edit-btn" th:if="${isOwner}" th:onclick="|location.href='@{/account/password-reset}'|">비밀번호 변경</button>
         <p th:if="${isOwner}" th:text="${account.email}"></p>
         <p th:if="${!#strings.isEmpty(account.bio)}" th:text="${account.bio}"></p>
     </div>

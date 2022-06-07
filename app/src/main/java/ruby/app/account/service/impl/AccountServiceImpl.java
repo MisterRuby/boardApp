@@ -9,15 +9,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ruby.app.account.form.ProfileForm;
 import ruby.app.account.form.UserAccount;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
 import ruby.app.domain.Account;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -98,8 +95,6 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public void updateProfile(Account account, String profileImage, String bio) {
-
-        // TODO - 이미지의 경우 실제 이미지 파일도 저장 되어야 함
         if (profileImage != null && !profileImage.isBlank()) account.setProfileImage(profileImage);
         if (bio != null && !bio.isBlank()) account.setBio(bio);
 
@@ -107,6 +102,17 @@ public class AccountServiceImpl implements AccountService {
              account 는 세션에 저장된 객체로 이미 한 번 조회했지만 엔티티 매니저가 관리하지 않는 준영속(detach) 상태의 엔티티다.
              - 준영속 엔티티는 변경감지는 일어나지 않지만 save 를 통해 변경된 내용을 DB에 업데이트 할 수 있다. (id 값이 있기 때문에)
         */
+        accountRepository.save(account);
+    }
+
+    /**
+     * 비밀번호 변경
+     * @param account
+     * @param password
+     */
+    @Override
+    public void updatePassword(Account account, String password) {
+        account.setPassword(passwordEncoder.encode(password));
         accountRepository.save(account);
     }
 

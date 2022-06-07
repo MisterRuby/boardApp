@@ -45,4 +45,11 @@ public interface AccountService {
      * @param bio
      */
     void updateProfile(Account account, String profileImage, String bio);
+
+    /**
+     * 비밀번호 변경
+     * @param account
+     * @param password
+     */
+    void updatePassword(Account account, String password);
 }

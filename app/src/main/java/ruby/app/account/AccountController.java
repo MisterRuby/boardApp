@@ -8,11 +8,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ruby.app.account.form.LoginAccount;
+import ruby.app.account.form.PasswordResetForm;
 import ruby.app.account.form.ProfileForm;
 import ruby.app.account.form.SignUpForm;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
-import ruby.app.config.util.validate.SignUpFormValidator;
+import ruby.app.account.validate.PasswordResetFormValidator;
+import ruby.app.account.validate.SignUpFormValidator;
 import ruby.app.domain.Account;
 
 import java.util.Optional;
@@ -24,8 +26,9 @@ import java.util.Optional;
 public class AccountController {
 
     private final AccountRepository accountRepository;
-    private final AccountService accountService;                // 계정 서비스
-    private final SignUpFormValidator signUpFormValidator;      // 회원가입 검증
+    private final AccountService accountService;                            // 계정 서비스
+    private final SignUpFormValidator signUpFormValidator;                  // 회원가입 검증
+    private final PasswordResetFormValidator passwordResetFormValidator;    // 비밀번호 변경 검증
 
     /**
      * 회원가입 페이지 이동
@@ -104,16 +107,6 @@ public class AccountController {
         accountService.sendSignUpConfirmEmail(account);
     }
 
-
-    /**
-     * 비밀번호 변경 페이지 이동
-     * @return
-     */
-    @GetMapping("/password-reset")
-    public String passwordResetForm() {
-        return "account/password-reset";
-    }
-
     /**
      * 계정 정보 조회
      * @param account
@@ -165,6 +158,32 @@ public class AccountController {
 
         accountService.updateProfile(account, profileForm.getProfileImage(), profileForm.getBio());
 
+        return "redirect:/account/" + account.getId();
+    }
+
+    /**
+     * 비밀번호 변경 페이지 이동
+     * @return
+     */
+    @GetMapping("/password-reset")
+    public String passwordResetForm(@ModelAttribute("passwordResetForm") PasswordResetForm passwordResetForm) {
+        return "account/password-reset";
+    }
+
+    @PostMapping("/password-reset")
+    public String passwordReset(@LoginAccount Account account,
+            @Validated @ModelAttribute("passwordResetForm") PasswordResetForm passwordResetForm, BindingResult bindingResult) {
+        // 필드 검증
+        if (bindingResult.hasErrors()) return "account/password-reset";
+
+        // 비밀번호, 확인용 비밀번호 일치 확인 검증
+        passwordResetFormValidator.validate(passwordResetForm, bindingResult);
+        if (bindingResult.hasErrors()) return "account/password-reset";
+
+        // 비밀번호 변경 적용
+        accountService.updatePassword(account, passwordResetForm.getPassword());
+
+        // 변경후 프로필 페이지로 이동
         return "redirect:/account/" + account.getId();
     }
 }

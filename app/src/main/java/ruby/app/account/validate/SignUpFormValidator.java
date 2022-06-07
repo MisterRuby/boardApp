@@ -1,4 +1,4 @@
-package ruby.app.config.util.validate;
+package ruby.app.account.validate;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,8 +23,6 @@ public class SignUpFormValidator implements Validator {
 
     /**
      * 회원 가입시 이메일, 닉네임 중복 여부 확인
-     * @param target the object that is to be validated
-     * @param errors contextual state about the validation process
      */
     @Override
     public void validate(Object target, Errors errors) {

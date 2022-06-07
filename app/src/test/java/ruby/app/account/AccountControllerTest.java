@@ -276,13 +276,45 @@ class AccountControllerTest {
                 .andExpect(view().name("redirect:/account/" + account.getId()));
     }
 
-
-
-
+    @Test
+    @DisplayName("비밀번호 변경시 확인용 비밀번호와 불일치")
+    @WithUserDetails(value = "ruby@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    void passwordResetNotEquals() throws Exception {
+        mockMvc.perform(post("/account/password-reset")
+                        .param("password", "12!@qwQW")
+                        .param("passwordConfirm", "12!@qwQWQW")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("account/password-reset"));
+    }
 
     @Test
-    @DisplayName("비밀번호 변경 화면 테스트")
-    void passwordResetForm() {
+    @DisplayName("비밀번호 변경시 최대 길이 초과")
+    @WithUserDetails(value = "ruby@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    void passwordResetOverLength() throws Exception {
+        mockMvc.perform(post("/account/password-reset")
+                        .param("password", "12!@qwQWkbdghjasbhcsdvksdbfsdbfkjdsbwaceihfsadsadasdsadasdasddasd" +
+                                "guakgcfacgkfkaeyugfuagcuwayvgfabfbadsfdasjdgadasdasasdsad")
+                        .param("passwordConfirm", "12!@qwQWkbdghjasbhcsdvksdbfsdbfkjdsbwaceihfsadsadasdsadasdasddasd" +
+                                "guakgcfacgkfkaeyugfuagcuwayvgfabfbadsfdasjdgadasdasasdsad")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("account/password-reset"));
+    }
 
+    @Test
+    @DisplayName("비밀번호 변경")
+    @WithUserDetails(value = "ruby@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    void passwordReset() throws Exception {
+        Account account = accountRepository.findByEmail("ruby@naver.com");
+
+        mockMvc.perform(post("/account/password-reset")
+                        .param("password", "12!@qwQWasAS")
+                        .param("passwordConfirm", "12!@qwQWasAS")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/account/" + account.getId()));
     }
 }

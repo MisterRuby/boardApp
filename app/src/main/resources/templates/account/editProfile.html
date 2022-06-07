@@ -22,7 +22,8 @@
         <h1 class="nickname" th:text="${account.nickname}"></h1>
         <label>한 줄 소개</label>
         <input type="text" name="bio" th:value="*{bio}"
-               maxlength="50" title="50자 이내로 입력해주세요."/>
+               title="50자 이내로 입력해주세요."/>
+        <div class="field-error" th:errors="*{bio}" />
         <input type="submit" value="변경하기"/>
     </div>
 </form>

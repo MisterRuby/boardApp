@@ -34,8 +34,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account signUp(String email, String nickname, String password) {
         Account newAccount = saveNewAccount(email, nickname, password);
-        newAccount.generateEmailCheckToken();   // 이메일 인증 토큰 생성
-        sendSignUpConfirmEmail(newAccount);     // 회원 가입 인증 이메일 전송
+//        newAccount.generateEmailCheckToken();   // 이메일 인증 토큰 생성
+        sendSignUpConfirmEmail(newAccount);     // 회원 가입 인증 이메일 전송 - 토큰을 이메일 전송시 새로 생성
 
         return newAccount;
     }
@@ -64,8 +64,11 @@ public class AccountServiceImpl implements AccountService {
      * @param account
      */
     @Override
-    @Transactional(readOnly = true)
     public void sendSignUpConfirmEmail(Account account) {
+        // 새로운 토큰을 발행해서 보내도록 변경
+        account.generateEmailCheckToken();
+        accountRepository.save(account);
+
         String token = account.getEmailCheckToken();
         String email = account.getEmail();
 
@@ -132,4 +135,23 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
+    /**
+     * 비밀번호 변경을 위한 링크를 이메일로 보내기
+     * @param email
+     */
+    @Override
+    public void sendPasswordForgetEmail(String email) {
+        Account account = accountRepository.findByEmail(email);
+
+        if (account == null) throw new IllegalArgumentException(email + "에 해당하는 사용자가 없습니다.");
+
+        account.generateEmailCheckToken();
+        String token = account.getEmailCheckToken();
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(account.getEmail());                                                      // 메일을 보낼 대상 이메일 주소
+        mailMessage.setSubject("Ruby's Board, 비밀번호 변경하기");                                      // 메일 제목
+        mailMessage.setText("/account/password-forget-reset?token=" + token + "&email=" + email);   // 메일 본문
+        mailSender.send(mailMessage);
+    }
 }

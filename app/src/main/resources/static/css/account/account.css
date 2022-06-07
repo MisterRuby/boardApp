@@ -62,7 +62,8 @@ section {
   margin-bottom: 2px;
 }
 
-.account-form input {
+.account-form input,
+.account-form button {
   display: block;
   width: 100%;
   padding: 10px;
@@ -77,7 +78,8 @@ section {
   width: fit-content;
 }
 
-.account-form input:last-child {
+.account-form input:last-child,
+.account-form button {
   margin-top: 20px;
   background-color: crimson;
   border: none;

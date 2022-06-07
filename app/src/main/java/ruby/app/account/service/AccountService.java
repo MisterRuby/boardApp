@@ -1,6 +1,7 @@
 package ruby.app.account.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.transaction.annotation.Transactional;
 import ruby.app.domain.Account;
 
 /**
@@ -50,4 +51,10 @@ public interface AccountService {
      * @param password
      */
     void updatePassword(Account account, String password);
+
+    /**
+     * 회원 가입 인증 이메일 전송
+     * @param email
+     */
+    void sendPasswordForgetEmail(String email);
 }

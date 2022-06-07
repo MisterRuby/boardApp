@@ -42,8 +42,8 @@ public class SecurityConfig {
         http
             .authorizeRequests()
             .mvcMatchers("/boards/add").authenticated()            // /boards/{boardId} 에서 허용되어버리므로 별도로 막아줌
-            .mvcMatchers("/", "/account/sign-up",
-                 "/account/check-email-token", "/account/password-reset",
+            .mvcMatchers("/", "/account/sign-up","/account/check-email-token",
+                    "/account/password-reset", "/account/password-forget", "/account/password-forget-reset",
                  "/boards", "/boards/{boardId}").permitAll()
             .anyRequest().authenticated();
 

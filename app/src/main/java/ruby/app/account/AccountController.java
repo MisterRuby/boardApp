@@ -228,7 +228,8 @@ public class AccountController {
             model.addAttribute("error", "wrong.email");
         } else if (!account.isValidToken(token)) {
             // 입력한 토큰 값이 다른 경우
-            model.addAttribute("error", "wrong.token");
+//            model.addAttribute("error", "wrong.token");
+            return "redirect:/";
         } else {
             model.addAttribute("id", account.getId());
         }

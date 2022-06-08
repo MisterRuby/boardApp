@@ -1,31 +1,41 @@
 package ruby.app.account.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import ruby.app.account.form.UserAccount;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
+import ruby.app.config.AppProperties;
 import ruby.app.domain.Account;
+import ruby.app.util.mail.EmailMessage;
+import ruby.app.util.mail.EmailService;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;          // 계정 Repository
-    private final JavaMailSender mailSender;                    // 메일 sender - 콘솔 테스트 용
-    private final PasswordEncoder passwordEncoder;              // PasswordEncoder;
-
-    private static final String HOME_URL = "http://localhost:8080";
+    private final EmailService emailService;                    // emailService
+    private final PasswordEncoder passwordEncoder;              // PasswordEncoder
+    private final TemplateEngine templateEngine;                // templateEngine
+    private final AppProperties appProperties;                  // appProperties
 
     /**
      * 회원 가입
@@ -74,12 +84,22 @@ public class AccountServiceImpl implements AccountService {
         String token = account.getEmailCheckToken();
         String email = account.getEmail();
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(account.getEmail());                                                      // 메일을 보낼 대상 이메일 주소
-        mailMessage.setSubject("Ruby's Board, 회원 가입 인증");                                       // 메일 제목
-        mailMessage.setText("회원가입 인증을 완료하시려면 해당 링크를 클릭해주세요!\n" +
-                HOME_URL + "/account/check-email-token?token=" + token + "&email=" + email);        // 메일 본문
-        mailSender.send(mailMessage);
+        Context context = new Context();
+        context.setVariable("link", "/account/check-email-token?token=" + token + "&email=" + email);
+        context.setVariable("nickname", account.getNickname());
+        context.setVariable("linkName", "이메일 인증하기");
+        context.setVariable("message", "이메일 인증을 완료하려면 하단 링크를 클릭하세요.");
+        context.setVariable("host", appProperties.getHost());
+
+        String htmlMessage = templateEngine.process("mail/simple-link", context);
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(email)
+                .subject("Ruby's Board, 회원 가입 인증")
+                .message(htmlMessage)
+                .build();
+
+        emailService.sendEmail(emailMessage);
     }
 
     /**
@@ -151,11 +171,21 @@ public class AccountServiceImpl implements AccountService {
         account.generateEmailCheckToken();
         String token = account.getEmailCheckToken();
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(account.getEmail());                                                      // 메일을 보낼 대상 이메일 주소
-        mailMessage.setSubject("Ruby's Board, 비밀번호 변경하기");                                      // 메일 제목
-        mailMessage.setText("비밀번호를 변경하시려면 해당 링크를 클릭해주세요!\n" +
-                HOME_URL + "/account/password-forget-reset?token=" + token + "&email=" + email);   // 메일 본문
-        mailSender.send(mailMessage);
+        Context context = new Context();
+        context.setVariable("link", "/account/password-forget-reset?token=" + token + "&email=" + email);
+        context.setVariable("nickname", account.getNickname());
+        context.setVariable("linkName", "비밀번호 변경하기");
+        context.setVariable("message", "비밀번호를 변경하려면 하단 링크를 클릭하세요.");
+        context.setVariable("host", appProperties.getHost());
+
+        String htmlMessage = templateEngine.process("mail/simple-link", context);
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(account.getEmail())
+                .subject("Ruby's Board, 비밀번호 변경하기")
+                .message(htmlMessage)
+                .build();
+
+        emailService.sendEmail(emailMessage);
     }
 }

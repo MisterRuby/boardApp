@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
 import ruby.app.domain.Account;
-
-import java.util.Map;
+import ruby.app.util.mail.EmailMessage;
+import ruby.app.util.mail.EmailService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.any;
@@ -48,14 +48,14 @@ class AccountControllerTest {
     @Autowired
     PasswordEncoder passwordEncoder;
     @MockBean
-    JavaMailSender mailSender;
+    EmailService emailService;
 
 
     @BeforeAll
     void addAdmin() {
         accountService.signUp("admin@naver.com", "admin", "123!@#qweQWE");
         accountService.signUp("ruby@naver.com", "ruby", "123!@#qweQWE");
-        Mockito.reset(mailSender);
+        Mockito.reset(emailService);
     }
 
     @Test
@@ -198,7 +198,7 @@ class AccountControllerTest {
         assertThat(account.getPassword()).isNotEqualTo("Ruby12!@");
 
         // 메일을 보냈는지 확인
-        then(mailSender).should().send(any(SimpleMailMessage.class));
+        then(emailService).should().sendEmail(any(EmailMessage.class));
     }
 
     @Test

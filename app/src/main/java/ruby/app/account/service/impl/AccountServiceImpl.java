@@ -25,6 +25,8 @@ public class AccountServiceImpl implements AccountService {
     private final JavaMailSender mailSender;                    // 메일 sender - 콘솔 테스트 용
     private final PasswordEncoder passwordEncoder;              // PasswordEncoder;
 
+    private static final String HOME_URL = "http://localhost:8080";
+
     /**
      * 회원 가입
      * @param email
@@ -73,9 +75,10 @@ public class AccountServiceImpl implements AccountService {
         String email = account.getEmail();
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(account.getEmail());                                            // 메일을 보낼 대상 이메일 주소
-        mailMessage.setSubject("Ruby's Board, 회원 가입 인증");                                  // 메일 제목
-        mailMessage.setText("/account/check-email-token?token=" + token + "&email=" + email);        // 메일 본문
+        mailMessage.setTo(account.getEmail());                                                      // 메일을 보낼 대상 이메일 주소
+        mailMessage.setSubject("Ruby's Board, 회원 가입 인증");                                       // 메일 제목
+        mailMessage.setText("회원가입 인증을 완료하시려면 해당 링크를 클릭해주세요!\n" +
+                HOME_URL + "/account/check-email-token?token=" + token + "&email=" + email);        // 메일 본문
         mailSender.send(mailMessage);
     }
 
@@ -151,7 +154,8 @@ public class AccountServiceImpl implements AccountService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(account.getEmail());                                                      // 메일을 보낼 대상 이메일 주소
         mailMessage.setSubject("Ruby's Board, 비밀번호 변경하기");                                      // 메일 제목
-        mailMessage.setText("/account/password-forget-reset?token=" + token + "&email=" + email);   // 메일 본문
+        mailMessage.setText("비밀번호를 변경하시려면 해당 링크를 클릭해주세요!\n" +
+                HOME_URL + "/account/password-forget-reset?token=" + token + "&email=" + email);   // 메일 본문
         mailSender.send(mailMessage);
     }
 }

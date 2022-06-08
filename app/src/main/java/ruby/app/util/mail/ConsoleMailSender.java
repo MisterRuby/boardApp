@@ -15,7 +15,7 @@ import java.io.InputStream;
  * 콘솔 확인용 - 테스트
  */
 @Slf4j
-@Profile("local")
+@Profile({"local"})
 @Component
 public class ConsoleMailSender implements JavaMailSender {
     @Override

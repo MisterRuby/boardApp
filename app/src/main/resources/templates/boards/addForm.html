@@ -10,16 +10,47 @@
 
   <!-- 제목, 글 내용 입력 -->
   <div class="container">
-    <div class="board">
-      <input type="text" class="title" name="title" placeholder="제목">
+    <form class="board">
+      <input type="text" id="title"  class="title" placeholder="제목">
       <textarea name="content" class="content" cols="30" rows="10"></textarea>
-      <button>저장</button>
-    </div>
+      <button type="button" th:onclick="addBoard()">저장</button>
+    </form>
   </div>
 
   <!-- CK Editor script-->
-  <script th:src="@{/js/ck.js}">
+  <script th:src="@{/js/ck.js}"></script>
+  <script type="application/javascript">
+    const csrfToken = document.getElementsByName("_csrf")[0].value;
+    const titleComp = document.getElementById("title");
+    const contentComp = document.querySelector(".ck-content");
+
+    const addBoard = () => {
+      const boardAddForm = {
+        title : titleComp.value,
+        contents : contentComp.innerHTML
+      }
+
+      fetch("/boards/add", {
+        method: "POST",
+        headers: {
+          "Content-Type" : "application/json",
+          'X-CSRF-TOKEN' : csrfToken,
+        },
+        body: JSON.stringify(boardAddForm)
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.status) {
+          alert(res.message);
+          location.href = "/boards/" + res.id;
+        } else {
+          alert(res.message);
+        }
+      })
+    }
   </script>
+
+
 </body>
 
 </html>

@@ -12,11 +12,13 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ruby.app.account.form.LoginAccount;
-import ruby.app.boards.form.BoardAddForm;
-import ruby.app.boards.form.BoardAddResult;
+import ruby.app.boards.form.*;
+import ruby.app.boards.service.BoardService;
 import ruby.app.domain.Account;
 import ruby.app.domain.Board;
+import ruby.app.domain.Comment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -45,7 +47,16 @@ public class BoardController {
      */
     @GetMapping("/{boardId}")
     public String board(@PathVariable Long boardId, @LoginAccount Account account, Model model) {
+        Board board = boardService.inquireBoard(boardId);
+        List<BoardInfoCommentForm> boardInfoCommentForms = new ArrayList<>();
+        for (Comment comment : board.getComments()) {
+            boardInfoCommentForms.add(new BoardInfoCommentForm(comment));
+        }
+
         if (account != null) model.addAttribute(account);
+        model.addAttribute("board", new BoardInfoForm(board));
+        model.addAttribute("comments", boardInfoCommentForms);
+
         return "/boards/board";
     }
 
@@ -54,7 +65,7 @@ public class BoardController {
      * @return
      */
     @GetMapping("/add")
-    public String addForm(@ModelAttribute @LoginAccount Account account, Model model) {
+    public String addForm(@ModelAttribute @LoginAccount Account account) {
         return "/boards/addForm";
     }
 
@@ -78,8 +89,6 @@ public class BoardController {
         Board addBoard = boardService.addBoard(boardAddForm.getTitle(), boardAddForm.getContents(), account);
         return ResponseEntity.ok().body(new BoardAddResult(true,"글이 등록되었습니다.", addBoard.getId()));
     }
-
-
 
 
     /**

@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 게시글 엔티티
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@Getter @Setter
 public class Board {
 
     /** 컬럼 */
@@ -34,4 +36,6 @@ public class Board {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
 }

@@ -10,48 +10,75 @@
   <div th:replace="~{/fragments :: email-verified-alert}"></div>
 
   <div class="container">
-    <div class="board">
+    <div class="board" th:object="${board}">
       <!-- 작성자 닉네임, 작성일자, 추천수, 조회수-->
       <div class="board-nav">
         <div class="board-info">
-          <!-- TODO - 작성자 클릭 시 작성자의 프로필 조회 화면으로 이동 -->
-          <p>Ruby</p>
-          <span>2022-05-31</span>
-          <span>추천수 5</span>
-          <span>조회수 10</span>
+          <input type="hidden" id="board-id" th:value="*{boardId}" >
+          <p th:text="|글쓴이 : *{writerNickname}|">Ruby</p>
+          <span th:text="*{boardCreateAt}">2022-05-31</span>
+          <span th:text="|조회 : *{boardVisited}|">추천수 10</span>
+          <span th:text="|추천 : *{boardRecommend}|">조회수 10</span>
         </div>
-        <div class="board-btns">
+        <div class="board-btns" th:if="${account.id == board.writerId}" >
           <!-- TODO - 수정의 경우 수정 페이지와 해당 데이터를 조회 - GET -->
-          <a th:href="@{/boards/12/edit}">수정</a>
+          <a th:href="@{/boards/*{boardId}/edit}">수정</a>
           <button>삭제</button>
         </div>
       </div>
       <!-- 제목 -->
-      <h2 class="title">글 제목입니다.</h2>
+      <h2 class="title" th:text="*{boardTitle}">글 제목입니다.</h2>
       <!-- 글 내용 -->
-      <article>
+      <article th:utext="*{boardContent}">
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores et alias impedit at corporis, quaerat quisquam adipisci ratione quas. Debitis qui dolorem suscipit commodi quaerat veniam aliquid, enim quam, ipsum nam earum. Commodi consequuntur, reprehenderit maxime vel pariatur quia amet suscipit recusandae ab excepturi dicta ipsum et ducimus quae necessitatibus distinctio eaque magni quod? Voluptate consectetur iure, dolorum non praesentium dolores architecto amet modi assumenda necessitatibus nulla similique optio, maiores molestiae quisquam consequatur ducimus recusandae labore. Possimus autem cumque aperiam veniam tempore eos tenetur ipsum, obcaecati deserunt amet rem at sit accusantium nisi totam, commodi voluptatibus? Non fugiat illo corrupti, deserunt velit sunt repellendus blanditiis quis voluptates repudiandae nulla earum maxime voluptas ab modi. Blanditiis consequatur doloremque, quo culpa provident praesentium temporibus. Ab laudantium, reprehenderit pariatur quidem sint ullam nostrum nulla dicta quibusdam repellendus nam eveniet aliquid porro ea natus impedit cupiditate possimus est non? Saepe excepturi qui repudiandae error nobis velit ullam. Quis laudantium facere fugit tempore neque, odit libero nam? Natus blanditiis sunt quidem maxime est suscipit eligendi magnam et provident possimus rem delectus sequi minus asperiores, explicabo hic voluptas dicta beatae, aperiam nemo, soluta error obcaecati praesentium placeat. Veritatis illo fugit natus praesentium libero, cumque ab quisquam magni eius doloribus fugiat corporis consequatur repellendus non rerum distinctio animi facilis nemo temporibus at nostrum nisi eum aut. Dolore sed vel inventore, ducimus sequi quas veritatis delectus id, iure molestiae magnam sunt, voluptatibus quam blanditiis sapiente maiores nulla possimus voluptatem pariatur numquam facilis! Iste, consequatur tenetur iusto delectus sequi incidunt repudiandae. Eaque eligendi, voluptatibus vel nesciunt possimus sint sed, nulla laboriosam fuga quisquam quae cumque illo sit enim quod beatae cum delectus! Cupiditate ducimus perferendis, ab rerum at ipsum optio maxime aspernatur, ipsa suscipit earum fugit quo, sapiente commodi placeat rem saepe iure laudantium. Nihil et reprehenderit aspernatur ex modi aliquam fuga maiores consectetur! Et vero delectus sed deserunt. Dolorum quod quaerat deserunt iusto illum laborum culpa dolorem! Quam, incidunt nobis? Fugit, architecto. Nam fugit dolore voluptatibus tempora esse ipsa quia, incidunt quisquam quas, porro facilis commodi totam amet, earum qui ut hic laborum culpa distinctio quis. Deleniti fugiat obcaecati laborum iusto sit enim corrupti? Minima ex cumque neque magnam iure adipisci sunt tempore omnis, esse officiis repudiandae unde modi dignissimos quod assumenda quaerat harum laborum tempora! Ducimus dolores odit, iste dolore dicta nam ea quibusdam rem qui voluptate, corporis dignissimos quaerat recusandae eius, aspernatur quidem aliquid facilis. Id?
       </article>
       <div class="comments">
         <!--댓글 개수-->
-        <p>댓글 3개</p>
+        <p th:text="|댓글 ${comments.size} 개|">댓글 3개</p>
         <!-- 댓글 작성자, 댓글 내용 -->
-        <div class="comment">
-          <p>Diamond</p>
-          <p>댓글 내용입니다.</p>
-          <button class="comment-delete">삭제</button>
+        <div class="comment" th:each="comment : ${comments}">
+          <span class="comment-nickname" th:text="${comment.writerNickname}">Diamond</span>
+          <span class="comment-createAt" th:text="${comment.commentCreateAt}">2022-06-10</span>
+          <button class="comment-delete" th:if="${account.id == comment.writerId}">삭제</button>
+          <div class="comment-contents" th:text="${comment.commentContents}">댓글 내용입니다.</div>
         </div>
-        <div class="comment">
-          <p>Diamond</p>
-          <p>댓글 내용입니다.</p>
-        </div>
-        <div class="comment">
-          <p>Diamond</p>
-          <p>댓글 내용입니다.</p>
+        <div class="comment-write">
+          <h3 class="comment-write-name" th:text="${account.nickname}">empty</h3>
+          <textarea id="comment-contents" class="comment-write-content"></textarea>
+          <button class="comment-write-btn" th:onclick="addComment()">등록</button>
         </div>
       </div>
     </div>
   </div>
 </body>
+
+<script type="application/javascript">
+  const csrfToken = document.getElementsByName("_csrf")[0].value;
+  const boardId = document.getElementById("board-id");
+  const contents = document.getElementById("comment-contents");
+
+  const addComment = () => {
+    const boardAddForm = {
+      boardId : boardId.value,
+      contents : contents.value
+    }
+
+    fetch("/comments/add", {
+      method: "POST",
+      headers: {
+        "Content-Type" : "application/json",
+        'X-CSRF-TOKEN' : csrfToken,
+      },
+      body: JSON.stringify(boardAddForm)
+    })
+    .then(res => res.json())
+    .then(res => {
+      if (res.status) {
+        window.location.reload();
+      }
+    })
+  }
+
+</script>
 
 </html>

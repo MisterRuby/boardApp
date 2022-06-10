@@ -11,7 +11,8 @@
   <!-- 제목, 글 내용 입력 -->
   <div class="container">
     <form class="board">
-      <input type="text" id="title"  class="title" placeholder="제목">
+      <input type="text" id="title"  class="title" placeholder="제목" required
+             title="제목은 공백일 수 없습니다.">
       <textarea name="content" class="content" cols="30" rows="10"></textarea>
       <button type="button" th:onclick="addBoard()">저장</button>
     </form>
@@ -25,7 +26,7 @@
     const contentComp = document.querySelector(".ck-content");
 
     const addBoard = () => {
-      const boardAddForm = {
+      const commentAddForm = {
         title : titleComp.value,
         contents : contentComp.innerHTML
       }
@@ -36,7 +37,7 @@
           "Content-Type" : "application/json",
           'X-CSRF-TOKEN' : csrfToken,
         },
-        body: JSON.stringify(boardAddForm)
+        body: JSON.stringify(commentAddForm)
       })
       .then(res => res.json())
       .then(res => {

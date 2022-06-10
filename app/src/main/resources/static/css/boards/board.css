@@ -77,12 +77,11 @@
 }
 
 .title {
-  margin: 0;
-  margin-top: 10px;
+  margin: 10px 0 0;
   padding: 5px;
   height: 70px;
   line-height: 60px;
-  border-bottom: 1px solid #ddd;
+  color: crimson;
 }
 
 .board article {
@@ -103,10 +102,51 @@
   border-bottom: 1px solid #ddd;
 }
 
+.comment span {
+  margin-right: 10px;
+}
+
+.comment-nickname {
+  font-weight: 400;
+}
+
+.comment-createAt,
+.comment-delete {
+  font-size: 12px;
+}
+
 .comment .comment-delete {
-  position: absolute;
-  bottom: 15px;
-  right: 0;
   background-color: white;
   border: none;
+}
+
+.comment-contents {
+  margin: 10px 0;
+}
+
+.comment-write {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.comment-write .comment-write-name {
+  width: 100px;
+  text-align: center;
+}
+
+.comment-write .comment-write-content {
+  width: calc(100% - 150px);
+  height: 100px;
+  margin-right: 20px;
+  resize: none;
+}
+
+.comment-write .comment-write-btn {
+  border: none;
+  border-radius: 5px;
+  width: 50px;
+  height: 30px;
+  background-color: crimson;
+  color: white;
 }

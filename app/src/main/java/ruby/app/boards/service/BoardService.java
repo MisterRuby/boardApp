@@ -1,9 +1,9 @@
 package ruby.app.boards.service;
 
+import org.springframework.data.domain.Page;
+import ruby.app.boards.form.SearchOption;
 import ruby.app.domain.Account;
 import ruby.app.domain.Board;
-
-import java.util.Optional;
 
 public interface BoardService {
 
@@ -22,5 +22,14 @@ public interface BoardService {
      * @param boardId
      * @return
      */
-    Board inquireBoard(Long boardId);
+    Board lookupBoard(Long boardId);
+
+    /**
+     * 게시글 목록 조회
+     * @param pageNum
+     * @param searchOption
+     * @param searchWord
+     * @return
+     */
+    Page<Board> lookupBoards(int pageNum, SearchOption searchOption, String searchWord);
 }

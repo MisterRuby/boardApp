@@ -3,7 +3,7 @@ package ruby.app.boards;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +20,7 @@ import ruby.app.domain.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -32,12 +33,22 @@ public class BoardController {
 
 
     /**
-     * 게시글 목록 페이지 이동
+     * 게시글 목록 페이지 이동 - TODO - 목록 페이지 뷰에 바인딩 처리
      * @return
      */
     @GetMapping
-    public String boards(@LoginAccount Account account, Model model) {
+    public String boards(@LoginAccount Account account,
+                         @RequestParam(required = false, defaultValue = "0") int pageNum,
+                         @RequestParam(required = false, defaultValue = "TITLE") SearchOption searchOption,
+                         @RequestParam(required = false, defaultValue = "") String searchWord,
+                         Model model) {
         if (account != null) model.addAttribute(account);
+        Page<Board> boards = boardService.lookupBoards(pageNum, searchOption, searchWord);
+
+        List<BoardForm> boardFormList = boards.stream().map(BoardForm::new).collect(Collectors.toList());
+
+        model.addAttribute("boards", boardFormList);
+
         return "/boards/boards";
     }
 
@@ -47,7 +58,7 @@ public class BoardController {
      */
     @GetMapping("/{boardId}")
     public String board(@PathVariable Long boardId, @LoginAccount Account account, Model model) {
-        Board board = boardService.inquireBoard(boardId);
+        Board board = boardService.lookupBoard(boardId);
         if (board == null) return "redirect:/boards";
 
         List<BoardInfoCommentForm> boardInfoCommentForms = new ArrayList<>();
@@ -77,7 +88,7 @@ public class BoardController {
      */
     @PostMapping("/add")
     @ResponseBody
-    public ResponseEntity addBoard(@LoginAccount Account account, @RequestBody @Validated BoardAddForm boardAddForm, BindingResult bindingResult) {
+    public ResponseEntity<BoardAddResult> addBoard(@LoginAccount Account account, @RequestBody @Validated BoardAddForm boardAddForm, BindingResult bindingResult) {
         String errorMessage = getApiResultResponseEntity(bindingResult);
         if (errorMessage != null) {
             return ResponseEntity.badRequest().body(new BoardAddResult(false, errorMessage, null));

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ruby.app.account.form.LoginAccount;
-import ruby.app.boards.form.BoardAddResult;
 import ruby.app.comments.form.CommentAddForm;
 import ruby.app.comments.form.CommentAddResult;
 import ruby.app.comments.service.CommentService;
@@ -38,14 +37,10 @@ public class CommentController {
     @PostMapping("/add")
     public ResponseEntity<CommentAddResult> addComment(
             @LoginAccount Account account, @RequestBody @Validated CommentAddForm commentAddForm, BindingResult bindingResult) {
-        // 댓글을 등록한다. 갱신된 정보는 리프레쉬로 처리한다.
+        // 댓글을 등록한다. 갱신된 정보는 리다이렉트로 처리한다.
         String errorMessage = getApiResultResponseEntity(bindingResult);
         if (errorMessage != null) {
             return ResponseEntity.badRequest().body(new CommentAddResult(false, null));
-        }
-        if (account == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new CommentAddResult(false,"로그인이 해제되었습니다. 다시 로그인해주세요."));
         }
 
         commentService.addComment(commentAddForm.getContents(), commentAddForm.getBoardId(), account);

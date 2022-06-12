@@ -34,6 +34,8 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final NumberPath<Integer> recommend = createNumber("recommend", Integer.class);
 
+    public final NumberPath<Integer> replyCount = createNumber("replyCount", Integer.class);
+
     public final StringPath title = createString("title");
 
     public final NumberPath<Integer> visited = createNumber("visited", Integer.class);

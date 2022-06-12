@@ -109,6 +109,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void completeCheckEmail(Account account) {
         account.checkEmailSuccess();
+        accountRepository.save(account);
         login(account.getEmail(), account.getPassword());
     }
 

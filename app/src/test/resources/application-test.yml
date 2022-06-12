@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    # url
+    url: jdbc:postgresql://localhost:5432/testdb
+    # db name
+    username: testuser
+    # db password
+    password: testpass
+    # db driver
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    open-in-view: false
+
+  # 해당 mail 설정을 추가하면 스프링부트가 JavaMailSender 를 빈으로 등록해준다.
+  # 1일 전송량이 제한되어 있으므로 테스트에 주의
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    # 송신 이메일
+    username: rubykim0723@gmail.com
+    password: kooiqlqruyacxvyr
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+
+# 이미지를 포함한 요청을 처리하기 위해 최대 전송 크기 변경
+server:
+  tomcat:
+    max-http-form-post-size: 20MB

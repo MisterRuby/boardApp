@@ -51,9 +51,10 @@ public class BoardServiceImpl implements BoardService {
     @Transactional(readOnly = true)
     public Board inquireBoard(Long boardId) {
         Board board = boardRepository.findBoardAndWriter(boardId);
-        List<Comment> comments = commentRepository.findCommentsAndWriter(board);
-        board.setComments(comments);
-
+        if (board != null) {
+            List<Comment> comments = commentRepository.findCommentsAndWriter(board);
+            board.setComments(comments);
+        }
         return board;
     }
 }

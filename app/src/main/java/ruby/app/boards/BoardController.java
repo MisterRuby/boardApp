@@ -48,6 +48,8 @@ public class BoardController {
     @GetMapping("/{boardId}")
     public String board(@PathVariable Long boardId, @LoginAccount Account account, Model model) {
         Board board = boardService.inquireBoard(boardId);
+        if (board == null) return "redirect:/boards";
+
         List<BoardInfoCommentForm> boardInfoCommentForms = new ArrayList<>();
         for (Comment comment : board.getComments()) {
             boardInfoCommentForms.add(new BoardInfoCommentForm(comment));
@@ -79,11 +81,6 @@ public class BoardController {
         String errorMessage = getApiResultResponseEntity(bindingResult);
         if (errorMessage != null) {
             return ResponseEntity.badRequest().body(new BoardAddResult(false, errorMessage, null));
-        }
-
-        if (account == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new BoardAddResult(false,"로그인이 해제되었습니다. 다시 로그인해주세요.", null));
         }
 
         Board addBoard = boardService.addBoard(boardAddForm.getTitle(), boardAddForm.getContents(), account);

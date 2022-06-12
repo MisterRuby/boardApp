@@ -14,6 +14,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import ruby.app.account.repository.AccountRepository;
@@ -21,6 +23,8 @@ import ruby.app.account.service.AccountService;
 import ruby.app.domain.Account;
 import ruby.app.util.mail.EmailMessage;
 import ruby.app.util.mail.EmailService;
+
+import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.any;
@@ -37,6 +41,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
+@Rollback
+@ActiveProfiles("test")
 class AccountControllerTest {
 
     @Autowired
@@ -50,11 +56,10 @@ class AccountControllerTest {
     @MockBean
     EmailService emailService;
 
+    // 테스트 계정 - "ruby@naver.com", "ruby12", "123!@#qweQWE"
 
     @BeforeAll
     void addAdmin() {
-        accountService.signUp("admin@naver.com", "admin", "123!@#qweQWE");
-        accountService.signUp("ruby@naver.com", "ruby", "123!@#qweQWE");
         Mockito.reset(emailService);
     }
 
@@ -150,7 +155,7 @@ class AccountControllerTest {
         mockMvc.perform(
                         post("/account/sign-up")
                                 .param("email", "ruby@naver.com")
-                                .param("nickname", "ruby1")
+                                .param("nickname", "ruby141221")
                                 .param("password", "adaASD12$$")
                                 .with(csrf())
                 )
@@ -165,8 +170,8 @@ class AccountControllerTest {
     void validateExistsNickname() throws Exception {
         mockMvc.perform(
                         post("/account/sign-up")
-                                .param("email", "ruby1@naver.com")
-                                .param("nickname", "ruby")
+                                .param("email", "ruby123@naver.com")
+                                .param("nickname", "ruby12")
                                 .param("password", "adaASD12$$")
                                 .with(csrf())
                 )

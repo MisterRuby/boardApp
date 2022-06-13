@@ -62,7 +62,6 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
         return new PageImpl<>(boards, pageable, totalCnt);
     }
 
-
     /**
      * 게시글 검색조건 설정
      * @param searchOption
@@ -84,7 +83,6 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
         if (searchOption.equals(SearchOption.NICKNAME)) {
             return board.account.nickname.contains(searchWord);
         }
-
 
         return null;
     }

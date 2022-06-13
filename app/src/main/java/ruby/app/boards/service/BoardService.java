@@ -5,6 +5,8 @@ import ruby.app.boards.form.SearchOption;
 import ruby.app.domain.Account;
 import ruby.app.domain.Board;
 
+import java.util.Optional;
+
 public interface BoardService {
 
     /**
@@ -32,4 +34,21 @@ public interface BoardService {
      * @return
      */
     Page<Board> lookupBoards(int pageNum, SearchOption searchOption, String searchWord);
+
+    /**
+     * 게시글 수정
+     * @param boardId
+     * @param title
+     * @param contents
+     * @return
+     */
+    Optional<Board> updateBoard(Long boardId, String title, String contents);
+
+    /**
+     * 게시글 삭제
+     * @param boardId
+     */
+    void deleteBoard(Long boardId);
+
+
 }

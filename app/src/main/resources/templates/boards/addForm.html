@@ -39,14 +39,11 @@
         },
         body: JSON.stringify(commentAddForm)
       })
-      .then(res => res.json())
       .then(res => {
-        if (res.status) {
-          alert(res.message);
-          location.href = "/boards/" + res.id;
-        } else {
-          alert(res.message);
-        }
+        res.json().then(data => {
+          alert(data.message);
+          if (res.ok) location.href = `/boards/${data.data}`;
+        });
       })
     }
   </script>

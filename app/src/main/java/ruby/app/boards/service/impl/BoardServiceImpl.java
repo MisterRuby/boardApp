@@ -17,6 +17,7 @@ import ruby.app.domain.Comment;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -77,5 +78,36 @@ public class BoardServiceImpl implements BoardService {
     public Page<Board> lookupBoards(int pageNum, SearchOption searchOption, String searchWord) {
         Pageable pageable = PageRequest.of(pageNum, PAGE_PER_MAX_COUNT, Sort.by(searchOption.name()).descending());
         return boardRepository.findBoards(searchOption, searchWord, pageable);
+    }
+
+    /**
+     * 게시글 수정
+     * @param boardId
+     * @param title
+     * @param contents
+     * @return
+     */
+    @Override
+    public Optional<Board> updateBoard(Long boardId, String title, String contents) {
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+        optionalBoard.ifPresent(board -> {
+            board.setTitle(title);
+            board.setContents(contents);
+            boardRepository.save(board);
+        });
+
+        return optionalBoard;
+    }
+
+    /**
+     * 게시글 삭제
+     * @param boardId
+     */
+    @Override
+    public void deleteBoard(Long boardId) {
+        // 댓글 삭제 - 벌크로 삭제해야함
+        commentRepository.deleteCommentsByBoard(boardId);
+        // 게시글 삭제
+        boardRepository.deleteById(boardId);
     }
 }

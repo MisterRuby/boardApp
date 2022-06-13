@@ -14,7 +14,6 @@
       <!-- 작성자 닉네임, 작성일자, 추천수, 조회수-->
       <div class="board-nav">
         <div class="board-info">
-          <input type="hidden" id="board-id" th:value="*{boardId}" >
           <p th:text="|글쓴이 : *{writerNickname}|">Ruby</p>
           <span th:text="*{boardCreateAt}">2022-05-31</span>
           <span th:text="|조회 : *{boardVisited}|">추천수 10</span>
@@ -22,8 +21,8 @@
         </div>
         <div class="board-btns" th:if="${account.id == board.writerId}" >
           <!-- TODO - 수정의 경우 수정 페이지와 해당 데이터를 조회 - GET -->
-          <a th:href="@{/boards/*{boardId}/edit}">수정</a>
-          <button>삭제</button>
+          <a th:href="|@{/boards/}*{boardId}/edit|">수정</a>
+          <button th:onclick="|deleteBoard(*{boardId})|">삭제</button>
         </div>
       </div>
       <!-- 제목 -->
@@ -45,7 +44,7 @@
         <div class="comment-write">
           <h3 class="comment-write-name" th:text="${account.nickname}">empty</h3>
           <textarea id="comment-contents" class="comment-write-content"></textarea>
-          <button class="comment-write-btn" th:onclick="addComment()">등록</button>
+          <button class="comment-write-btn" th:onclick="|addComment(*{boardId})|">등록</button>
         </div>
       </div>
     </div>
@@ -53,13 +52,30 @@
 </body>
 
 <script type="application/javascript">
+  const DELETE_MESSAGE = "삭제하시겠습니까?";
   const csrfToken = document.getElementsByName("_csrf")[0].value;
-  const boardId = document.getElementById("board-id");
   const contents = document.getElementById("comment-contents");
 
-  const addComment = () => {
+  const deleteBoard = (boardId) => {
+    if (!confirm(DELETE_MESSAGE)) return;
+
+    fetch(`/boards/${boardId}`, {
+      method: "DELETE",
+      headers: {
+        'X-CSRF-TOKEN' : csrfToken,
+      },
+    })
+    .then(res =>
+      res.json().then(data => {
+        alert(data.message);
+        if (res.ok) location.href = "/boards";
+      })
+    );
+  }
+
+  const addComment = (boardId) => {
     const boardAddForm = {
-      boardId : boardId.value,
+      boardId : boardId,
       contents : contents.value
     }
 
@@ -71,12 +87,12 @@
       },
       body: JSON.stringify(boardAddForm)
     })
-    .then(res => res.json())
-    .then(res => {
-      if (res.status) {
-        window.location.reload();
-      }
-    })
+    .then(res =>
+      res.json().then(data => {
+        if (res.ok) window.location.reload();
+        alert(data.message);
+      })
+    )
   }
 
 </script>

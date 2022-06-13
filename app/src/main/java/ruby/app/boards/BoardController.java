@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ruby.app.account.form.LoginAccount;
+import ruby.app.boards.apiResult.ApiResult;
 import ruby.app.boards.form.*;
 import ruby.app.boards.service.BoardService;
 import ruby.app.domain.Account;
@@ -19,8 +21,8 @@ import ruby.app.domain.Board;
 import ruby.app.domain.Comment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -89,14 +91,14 @@ public class BoardController {
      */
     @PostMapping("/add")
     @ResponseBody
-    public ResponseEntity<BoardAddResult> addBoard(@LoginAccount Account account, @RequestBody @Validated BoardAddForm boardAddForm, BindingResult bindingResult) {
+    public ResponseEntity<ApiResult<Long>> addBoard(@LoginAccount Account account, @RequestBody @Validated BoardAddForm boardAddForm, BindingResult bindingResult) {
         String errorMessage = getApiResultResponseEntity(bindingResult);
         if (errorMessage != null) {
-            return ResponseEntity.badRequest().body(new BoardAddResult(false, errorMessage, null));
+            return ResponseEntity.badRequest().body(new ApiResult<>(errorMessage, null));
         }
 
         Board addBoard = boardService.addBoard(boardAddForm.getTitle(), boardAddForm.getContents(), account);
-        return ResponseEntity.ok().body(new BoardAddResult(true,"글이 등록되었습니다.", addBoard.getId()));
+        return ResponseEntity.ok().body(new ApiResult<>("글이 등록되었습니다.", addBoard.getId()));
     }
 
 
@@ -105,8 +107,45 @@ public class BoardController {
      * @return
      */
     @GetMapping("/{boardId}/edit")
-    public String editForm(@PathVariable Long boardId) {
+    public String editForm(@LoginAccount @ModelAttribute Account account, @PathVariable Long boardId, Model model) {
+        Board board = boardService.lookupBoard(boardId);
+        model.addAttribute(modelMapper.map(board, BoardEditForm.class));
+
         return "/boards/editForm";
+    }
+
+    /**
+     * 게시글 수정
+     * @return
+     */
+    @PatchMapping("/{boardId}/edit")
+    public ResponseEntity<ApiResult<Long>> editBoard(@LoginAccount @ModelAttribute Account account, @PathVariable Long boardId,
+                            @RequestBody @Validated BoardEditForm boardEditForm, BindingResult bindingResult) {
+
+        String errorMessage = getApiResultResponseEntity(bindingResult);
+        if (errorMessage != null) {
+            return ResponseEntity.badRequest().body(new ApiResult<>(errorMessage, null));
+        }
+
+        Optional<Board> board = boardService.updateBoard(boardId, boardEditForm.getTitle(), boardEditForm.getContents());
+        if (board.isPresent()) {
+            return ResponseEntity.ok().body(new ApiResult<>("글이 수정되었습니다.", boardId));
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResult<>("해당 글을 찾을 수 없습니다.", null));
+    }
+
+    /**
+     * 게시글 삭제
+     * @param account
+     * @param boardId
+     * @return
+     */
+    @DeleteMapping("/{boardId}")
+    @ResponseBody
+    public ResponseEntity<ApiResult<Object>> deleteBoard(@LoginAccount @ModelAttribute Account account, @PathVariable Long boardId) {
+        boardService.deleteBoard(boardId);
+        return ResponseEntity.ok().body(new ApiResult<>("삭제되었습니다.", null));
     }
 
 

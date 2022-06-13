@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ruby.app.account.form.LoginAccount;
+import ruby.app.boards.apiResult.ApiResult;
 import ruby.app.comments.form.CommentAddForm;
 import ruby.app.comments.form.CommentAddResult;
 import ruby.app.comments.service.CommentService;
@@ -35,17 +36,17 @@ public class CommentController {
      * @return
      */
     @PostMapping("/add")
-    public ResponseEntity<CommentAddResult> addComment(
+    public ResponseEntity<ApiResult<Long>> addComment(
             @LoginAccount Account account, @RequestBody @Validated CommentAddForm commentAddForm, BindingResult bindingResult) {
         // 댓글을 등록한다. 갱신된 정보는 리다이렉트로 처리한다.
         String errorMessage = getApiResultResponseEntity(bindingResult);
         if (errorMessage != null) {
-            return ResponseEntity.badRequest().body(new CommentAddResult(false, null));
+            return ResponseEntity.badRequest().body(new ApiResult<>(errorMessage, null));
         }
 
         commentService.addComment(commentAddForm.getContents(), commentAddForm.getBoardId(), account);
 
-        return ResponseEntity.ok().body(new CommentAddResult(true, null));
+        return ResponseEntity.ok().body(new ApiResult<>(null, null));
     }
 
     /**

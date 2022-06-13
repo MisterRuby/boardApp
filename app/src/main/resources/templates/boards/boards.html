@@ -46,9 +46,11 @@
          th:href="|@{/boards?}pageNum=*{pageNum / 10 * 10 - 1}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">이전</a>
 
       <a th:if="${boardSearchForm.pageNum / 10 * 10 + 10 < totalPage}"
+         th:class="${boardSearchForm.pageNum == num ? 'select-page' : 'none-select-page'}"
          th:each="num : *{#numbers.sequence(pageNum / 10 * 10, pageNum / 10 * 10 + 9)}"
          th:href="|@{/boards?}pageNum=${num}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|" th:text="${num + 1}"></a>
       <a th:if="${boardSearchForm.pageNum / 10 * 10 + 10 >= totalPage}"
+         th:class="${boardSearchForm.pageNum == num ? 'select-page' : 'none-select-page'}"
          th:each="num : ${#numbers.sequence(boardSearchForm.pageNum / 10 * 10, totalPage - 1)}"
          th:href="|@{/boards?}pageNum=${num}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|" th:text="${num + 1}"></a>
 

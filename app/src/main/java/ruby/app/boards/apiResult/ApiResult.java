@@ -1,4 +1,4 @@
-package ruby.app.boards.form;
+package ruby.app.boards.apiResult;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,9 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class BoardAddResult {
+public class ApiResult<T> {
 
-    private boolean status;
     private String message;
-    private Long id;
+    private T data;
 }

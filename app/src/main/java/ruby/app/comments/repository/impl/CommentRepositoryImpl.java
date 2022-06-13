@@ -33,4 +33,14 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .fetch();
     }
 
+    /**
+     * 게시글에 엮인 댓글 전체 삭제
+     * @param boardId
+     */
+    public void deleteCommentsByBoard(Long boardId) {
+        queryFactory.delete(comment)
+                .where(comment.board.id.eq(boardId))
+                .execute();
+    }
+
 }

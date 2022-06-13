@@ -10,15 +10,42 @@
 
   <!-- 제목, 글 내용 입력 -->
   <div class="container">
-    <div class="board">
-      <input type="text" class="title" name="title" value="제목을 수정해서 저장">
-      <textarea name="content" class="content" cols="30" rows="10"></textarea>
-      <button>수정</button>
+    <div class="board" th:object="${boardEditForm}">
+      <input type="text" class="title" th:field="*{title}">
+      <textarea class="content" cols="30" rows="10" th:field="*{contents}"></textarea>
+      <button type="button" th:onclick="|editBoard(*{id})|">수정</button>
     </div>
   </div>
 
   <!-- CK Editor script-->
-  <script th:src="@{/js/ck.js}">
+  <script th:src="@{/js/ck.js}"></script>
+  <script type="application/javascript">
+    const csrfToken = document.getElementsByName("_csrf")[0].value;
+    const titleComp = document.getElementById("title");
+    const contentComp = document.querySelector(".ck-content");
+
+    const editBoard = (boardId) => {
+      const boardEditForm = {
+        id: boardId,
+        title : titleComp.value,
+        contents : contentComp.innerHTML
+      }
+
+      fetch(`/boards/${boardId}/edit`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type" : "application/json",
+          'X-CSRF-TOKEN' : csrfToken,
+        },
+        body: JSON.stringify(boardEditForm)
+      })
+      .then(res => {
+        res.json().then(data => {
+          alert(data.message);
+          if (res.ok) location.href = `/boards/${data.data}`;
+        })
+      })
+    }
   </script>
 </body>
 

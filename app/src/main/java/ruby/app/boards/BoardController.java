@@ -42,12 +42,16 @@ public class BoardController {
                          @RequestParam(required = false, defaultValue = "TITLE") SearchOption searchOption,
                          @RequestParam(required = false, defaultValue = "") String searchWord,
                          Model model) {
-        if (account != null) model.addAttribute(account);
-        Page<Board> boards = boardService.lookupBoards(pageNum, searchOption, searchWord);
 
+        Page<Board> boards = boardService.lookupBoards(pageNum, searchOption, searchWord);
         List<BoardForm> boardFormList = boards.stream().map(BoardForm::new).collect(Collectors.toList());
 
+        if (account != null) model.addAttribute(account);
         model.addAttribute("boards", boardFormList);
+        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("searchOption", searchOption);
+        model.addAttribute("searchWord", searchWord);
+        model.addAttribute("totalPage", boards.getTotalPages());
 
         return "/boards/boards";
     }

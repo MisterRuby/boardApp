@@ -15,45 +15,47 @@
     </div>
 
     <div class="boards">
-      <div class="board">
-        <!-- 글번호, 제목, 댓글수, 추천수, 조회수, 작성자 닉네임, 작성일자 -->
+      <div class="board" th:each="board : ${boards}">
         <div class="board-left">
-          <p class="no">10412</p>
-          <!-- TODO - board 로 넘어가야함 -->
-          <a th:href="@{/boards/8}">글 제목입니다.</a>
+          <p class="no" th:text="${board.boardId}">10412</p>
+          <a th:href="|@{/boards/}${board.boardId}|">글 제목입니다.</a>
         </div>
         <div class="board-right">
           <div class="board-right-top">
-            <span>댓글 3</span>
-            <span>추천수 5</span>
-            <span>조회수 10</span>
+            <span th:text="|댓글 : ${board.replyCount}|">댓글 3</span>
+            <span th:text="|추천수 : ${board.recommend}|">추천수 5</span>
+            <span th:text="|조회수 : ${board.visited}|">조회수 10</span>
           </div>
           <div class="board-right-bottom">
             <!-- TODO - 작성자 클릭 시 작성자의 프로필 조회 화면으로 이동 -->
-            <span>작성자 : Ruby</span>
-            <span>작성일 : 2022-05-31</span>
+            <span th:text="|작성자 : ${board.nickname}|">작성자 : Ruby</span>
+            <span th:text="|작성일 : ${board.createAt}|">작성일 : 2022-05-31</span>
           </div>
         </div>
       </div>
 
     </div>
+
     <div class="page-nav">
-      <a href="#">&lt;&lt;</a>
-      <a href="#">&lt;</a>
-      <a href="#">11</a>
-      <a href="#">12</a>
-      <a href="#">13</a>
-      <a href="#">14</a>
-      <a href="#">15</a>
-      <a href="#">16</a>
-      <a href="#">17</a>
-      <a href="#">18</a>
-      <a href="#">19</a>
-      <a href="#">20</a>
-      <a href="#">&gt;</a>
-      <a href="#">&gt;&gt;</a>
+      <a th:if="${pageNum >= 10}"
+         th:href="|@{/boards?}pageNum=0&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|">&lt;&lt;</a>
+      <a th:if="${pageNum >= 10}"
+         th:href="|@{/boards?}pageNum=${pageNum / 10 * 10 - 1}&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|">&lt;</a>
+
+      <a th:if="${pageNum / 10 * 10 + 10 < totalPage}"
+         th:each="num: ${#numbers.sequence(pageNum / 10 * 10, pageNum / 10 * 10 + 9)}"
+         th:href="|@{/boards?}pageNum=${num}&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|" th:text="${num + 1}"></a>
+      <a th:if="${pageNum / 10 * 10 + 10 >= totalPage}"
+         th:each="num: ${#numbers.sequence(pageNum / 10 * 10, totalPage - 1)}"
+         th:href="|@{/boards?}pageNum=${num}&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|" th:text="${num + 1}"></a>
+
+      <a th:if="${pageNum / 10 * 10 + 10 < totalPage}"
+         th:href="|@{/boards?}pageNum=${pageNum / 10 * 10 + 10}&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|">&gt;</a>
+      <a th:if="${pageNum / 10 * 10 + 10 < totalPage}"
+         th:href="|@{/boards?}pageNum=${totalPage - 1}&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|">&gt;&gt;</a>
     </div>
   </div>
+
 </body>
 
 </html>

@@ -19,6 +19,7 @@ import ruby.app.domain.Board;
 import ruby.app.domain.Comment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,27 +32,23 @@ public class BoardController {
     private final BoardService boardService;            // 게시판 service
     private final ModelMapper modelMapper;              // ModelMapper
 
-
     /**
-     * 게시글 목록 페이지 이동 - TODO - 목록 페이지 뷰에 바인딩 처리
+     * 게시글 목록 페이지 이동
      * @return
      */
     @GetMapping
     public String boards(@LoginAccount Account account,
-                         @RequestParam(required = false, defaultValue = "0") int pageNum,
-                         @RequestParam(required = false, defaultValue = "TITLE") SearchOption searchOption,
-                         @RequestParam(required = false, defaultValue = "") String searchWord,
+                         BoardSearchForm boardSearchForm,
                          Model model) {
 
-        Page<Board> boards = boardService.lookupBoards(pageNum, searchOption, searchWord);
+        Page<Board> boards =
+                boardService.lookupBoards(boardSearchForm.getPageNum(), boardSearchForm.getSearchOption(), boardSearchForm.getSearchWord());
         List<BoardForm> boardFormList = boards.stream().map(BoardForm::new).collect(Collectors.toList());
 
         if (account != null) model.addAttribute(account);
         model.addAttribute("boards", boardFormList);
-        model.addAttribute("pageNum", pageNum);
-        model.addAttribute("searchOption", searchOption);
-        model.addAttribute("searchWord", searchWord);
         model.addAttribute("totalPage", boards.getTotalPages());
+        model.addAttribute("optionList", SearchOption.values());
 
         return "/boards/boards";
     }

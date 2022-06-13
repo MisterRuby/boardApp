@@ -15,10 +15,13 @@
     </div>
 
     <div class="boards">
+      <div class="empty-board" th:if="${boards.size == 0}">
+        <h2>등록된 게시글이 없습니다.</h2>
+      </div>
       <div class="board" th:each="board : ${boards}">
         <div class="board-left">
           <p class="no" th:text="${board.boardId}">10412</p>
-          <a th:href="|@{/boards/}${board.boardId}|">글 제목입니다.</a>
+          <a th:href="|@{/boards/}${board.boardId}|" th:text="${board.title}">글 제목입니다.</a>
         </div>
         <div class="board-right">
           <div class="board-right-top">
@@ -36,24 +39,32 @@
 
     </div>
 
-    <div class="page-nav">
-      <a th:if="${pageNum >= 10}"
-         th:href="|@{/boards?}pageNum=0&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|">&lt;&lt;</a>
-      <a th:if="${pageNum >= 10}"
-         th:href="|@{/boards?}pageNum=${pageNum / 10 * 10 - 1}&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|">&lt;</a>
+    <div class="page-nav" th:if="${boards.size > 0}" th:object="${boardSearchForm}">
+      <a th:if="*{pageNum >= 10}"
+         th:href="|@{/boards?}pageNum=0&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">&lt;&lt;</a>
+      <a th:if="*{pageNum >= 10}"
+         th:href="|@{/boards?}pageNum=*{pageNum / 10 * 10 - 1}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">이전</a>
 
-      <a th:if="${pageNum / 10 * 10 + 10 < totalPage}"
-         th:each="num: ${#numbers.sequence(pageNum / 10 * 10, pageNum / 10 * 10 + 9)}"
-         th:href="|@{/boards?}pageNum=${num}&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|" th:text="${num + 1}"></a>
-      <a th:if="${pageNum / 10 * 10 + 10 >= totalPage}"
-         th:each="num: ${#numbers.sequence(pageNum / 10 * 10, totalPage - 1)}"
-         th:href="|@{/boards?}pageNum=${num}&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|" th:text="${num + 1}"></a>
+      <a th:if="${boardSearchForm.pageNum / 10 * 10 + 10 < totalPage}"
+         th:each="num : *{#numbers.sequence(pageNum / 10 * 10, pageNum / 10 * 10 + 9)}"
+         th:href="|@{/boards?}pageNum=${num}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|" th:text="${num + 1}"></a>
+      <a th:if="${boardSearchForm.pageNum / 10 * 10 + 10 >= totalPage}"
+         th:each="num : ${#numbers.sequence(boardSearchForm.pageNum / 10 * 10, totalPage - 1)}"
+         th:href="|@{/boards?}pageNum=${num}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|" th:text="${num + 1}"></a>
 
-      <a th:if="${pageNum / 10 * 10 + 10 < totalPage}"
-         th:href="|@{/boards?}pageNum=${pageNum / 10 * 10 + 10}&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|">&gt;</a>
-      <a th:if="${pageNum / 10 * 10 + 10 < totalPage}"
-         th:href="|@{/boards?}pageNum=${totalPage - 1}&searchOption=${searchOption == null ? '' : searchOption}&searchWord=${searchWord == null ? '' : searchWord}|">&gt;&gt;</a>
+      <a th:if="${boardSearchForm.pageNum / 10 * 10 + 10 < totalPage}"
+         th:href="|@{/boards?}pageNum=*{pageNum / 10 * 10 + 10}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">다음</a>
+      <a th:if="${boardSearchForm.pageNum / 10 * 10 + 10 < totalPage}"
+         th:href="|@{/boards?}pageNum=${totalPage - 1}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">&gt;&gt;</a>
     </div>
+
+    <form class="search-form" th:action="@{/boards}" th:object="${boardSearchForm}" method="get">
+      <select th:field="*{searchOption}">
+        <option th:each="option : ${optionList}" th:value="${option}" th:text="${option.text}"></option>
+      </select>
+      <input th:field="*{searchWord}">
+      <input class="search-form-btn" type="submit" value="검색">
+    </form>
   </div>
 
 </body>

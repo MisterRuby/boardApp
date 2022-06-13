@@ -48,6 +48,31 @@
   width: 800px;
 }
 
+.boards-nav {
+  margin-top: 50px;
+}
+
+.search-form * {
+  height: 30px;
+}
+
+.search-form #searchOption {
+  width: 100px;
+}
+
+.search-form #searchWord {
+  width: 300px;
+  margin-right: 5px;
+}
+
+.search-form .search-form-btn{
+  width: 80px;
+  border: none;
+  background-color: crimson;
+  color: white;
+}
+
+
 .boards-nav a {
   position: absolute;
   top: 50%;
@@ -66,6 +91,14 @@
 
 .boards {
   height: 600px;
+}
+
+.empty-board {
+  text-align: center;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }
 
 .board {

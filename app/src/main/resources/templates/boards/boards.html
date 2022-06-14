@@ -30,8 +30,8 @@
             <span th:text="|조회수 : ${board.visited}|">조회수 10</span>
           </div>
           <div class="board-right-bottom">
-            <!-- TODO - 작성자 클릭 시 작성자의 프로필 조회 화면으로 이동 -->
-            <span th:text="|작성자 : ${board.nickname}|">작성자 : Ruby</span>
+            <a th:href="|@{/account/}${board.writerId}|"
+               th:text="|작성자 : ${board.nickname}|">작성자 : Ruby</a>
             <span th:text="|작성일 : ${board.createAt}|">작성일 : 2022-05-31</span>
           </div>
         </div>

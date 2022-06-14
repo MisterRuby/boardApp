@@ -68,7 +68,8 @@
   align-items: center;
 }
 
-.board-info p {
+.board-info a {
+  display: block;
   margin: 0;
 }
 

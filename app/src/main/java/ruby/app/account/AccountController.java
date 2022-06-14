@@ -133,15 +133,19 @@ public class AccountController {
             throw new IllegalArgumentException(accountId + "에 해당하는 사용자가 없습니다.");
         }
 
-//        model.addAttribute("account", accountOptional.get());
-        model.addAttribute(accountOptional.get());      // 생략할 경우 매개변수의 객체 타입명의 캐멀케이스 문자열 값이 키 값이 된다.
-        model.addAttribute("isOwner", account.equals(accountOptional.get()));
+        Account infoAccount = accountOptional.get();
+
+        if (account != null) {
+            model.addAttribute(account);
+            model.addAttribute("isOwner", account.equals(infoAccount));
+        }
 
         Page<Board> boards =
-                boardService.lookupBoards(pageNum, SearchOption.NICKNAME, account.getNickname());
+                boardService.lookupBoards(pageNum, SearchOption.NICKNAME, infoAccount.getNickname());
         List<BoardForm> boardFormList = boards.stream().map(BoardForm::new).collect(Collectors.toList());
         Paging paging = new Paging().setPagingNumbers(boards.getPageable(), boards.getTotalPages());
 
+        model.addAttribute("infoAccount", infoAccount);
         model.addAttribute("boards", boardFormList);
         model.addAttribute("paging", paging);
         model.addAttribute("optionList", SearchOption.values());

@@ -127,12 +127,13 @@
 
 .board .board-right .board-right-top span {
   display: inline-block;
-  margin-right: 20px;
+  margin-right: 15px;
 }
 
-.board .board-right .board-right-bottom span {
+.board .board-right .board-right-bottom span,
+.board .board-right .board-right-bottom a {
   display: inline-block;
-  margin-right: 20px;
+  margin-right: 15px;
 }
 
 .no {

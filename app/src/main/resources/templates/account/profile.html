@@ -9,15 +9,15 @@
 <div th:replace="~{/fragments :: email-verified-alert}"></div>
 
 <div class="profile-container">
-    <img th:if="${#strings.isEmpty(account.profileImage)}" style="background-color: #ffffff;"/>
-    <img th:if="${!#strings.isEmpty(account.profileImage)}" th:src="${account.profileImage}" />
+    <img th:if="${#strings.isEmpty(infoAccount.profileImage)}" style="background-color: #ffffff;"/>
+    <img th:if="${!#strings.isEmpty(infoAccount.profileImage)}" th:src="${infoAccount.profileImage}" />
 
     <div class="profile-account">
-        <span class="nickname" th:text="${account.nickname}"></span>
+        <span class="nickname" th:text="${infoAccount.nickname}"></span>
         <button class="profile-edit-btn" th:if="${isOwner}" th:onclick="|location.href='@{/account/profile}'|">프로필 수정</button>
         <button class="password-edit-btn" th:if="${isOwner}" th:onclick="|location.href='@{/account/password-reset}'|">비밀번호 변경</button>
-        <p th:if="${isOwner}" th:text="${account.email}"></p>
-        <p th:if="${!#strings.isEmpty(account.bio)}" th:text="${account.bio}"></p>
+        <p th:if="${isOwner}" th:text="${infoAccount.email}"></p>
+        <p th:if="${!#strings.isEmpty(infoAccount.bio)}" th:text="${infoAccount.bio}"></p>
     </div>
 
     <!--/* 작성자의 작성글 목록 */-->
@@ -45,18 +45,18 @@
 
     <div class="page-nav" th:if="${boards.size > 0}" th:object="${boardSearchForm}">
         <a th:if="${paging.start >= 10}"
-           th:href="|@{/account/}${account.id}?pageNum=0&searchOption=NICKNAME&searchWord=${account.nickname}|">&lt;&lt;</a>
+           th:href="|@{/account/}${infoAccount.id}?pageNum=0&searchOption=NICKNAME&searchWord=${infoAccount.nickname}|">&lt;&lt;</a>
         <a th:if="${paging.start >= 10}"
-           th:href="|@{/account/}${account.id}?pageNum=${paging.start - 1}&searchOption=NICKNAME&searchWord=${account.nickname}|">이전</a>
+           th:href="|@{/account/}${infoAccount.id}?pageNum=${paging.start - 1}&searchOption=NICKNAME&searchWord=${infoAccount.nickname}|">이전</a>
 
         <a th:class="${paging.now == num ? 'select-page' : 'none-select-page'}"
            th:each="num : ${#numbers.sequence(paging.start, paging.end)}"
-           th:href="|@{/account/}${account.id}?pageNum=${num}&searchOption=NICKNAME&searchWord=${account.nickname}|" th:text="${num + 1}"></a>
+           th:href="|@{/account/}${infoAccount.id}?pageNum=${num}&searchOption=NICKNAME&searchWord=${infoAccount.nickname}|" th:text="${num + 1}"></a>
 
         <a th:if="${paging.end < paging.totalEnd}"
-           th:href="|@{/account/}${account.id}?pageNum=${paging.end + 1}&searchOption=NICKNAME&searchWord=${account.nickname}|">다음</a>
+           th:href="|@{/account/}${infoAccount.id}?pageNum=${paging.end + 1}&searchOption=NICKNAME&searchWord=${infoAccount.nickname}|">다음</a>
         <a th:if="${paging.end < paging.totalEnd}"
-           th:href="|@{/account/}${account.id}?pageNum=${paging.totalEnd}&searchOption=NICKNAME&searchWord=${account.nickname}|">&gt;&gt;</a>
+           th:href="|@{/account/}${infoAccount.id}?pageNum=${paging.totalEnd}&searchOption=NICKNAME&searchWord=${infoAccount.nickname}|">&gt;&gt;</a>
     </div>
 </div>
 

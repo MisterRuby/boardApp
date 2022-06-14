@@ -16,6 +16,7 @@ public class BoardForm {
     private Integer replyCount;
     private Integer recommend;
     private Integer visited;
+    private Long writerId;
     private String nickname;
     private LocalDate createAt;
 
@@ -25,6 +26,7 @@ public class BoardForm {
         this.replyCount = board.getReplyCount();
         this.recommend = board.getRecommend();
         this.visited = board.getVisited();
+        this.writerId = board.getAccount().getId();
         this.nickname = board.getAccount().getNickname();
         this.createAt = board.getCreateAt().toLocalDate();
     }

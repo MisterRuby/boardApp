@@ -14,13 +14,13 @@
       <!-- 작성자 닉네임, 작성일자, 추천수, 조회수-->
       <div class="board-nav">
         <div class="board-info">
-          <p th:text="|글쓴이 : *{writerNickname}|">Ruby</p>
+          <a th:href="|@{/account/}${board.writerId}|"
+             th:text="|글쓴이 : *{writerNickname}|">Ruby</a>
           <span th:text="*{boardCreateAt}">2022-05-31</span>
           <span th:text="|조회 : *{boardVisited}|">추천수 10</span>
           <span th:text="|추천 : *{boardRecommend}|">조회수 10</span>
         </div>
         <div class="board-btns" th:if="${account.id == board.writerId}" >
-          <!-- TODO - 수정의 경우 수정 페이지와 해당 데이터를 조회 - GET -->
           <a th:href="|@{/boards/}*{boardId}/edit|">수정</a>
           <button th:onclick="|deleteBoard(*{boardId})|">삭제</button>
         </div>

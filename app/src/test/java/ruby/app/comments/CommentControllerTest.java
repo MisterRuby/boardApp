@@ -1,6 +1,7 @@
 package ruby.app.comments;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -15,9 +16,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import ruby.app.comments.form.CommentAddForm;
+import ruby.app.comments.repository.CommentRepository;
 import ruby.app.comments.service.CommentService;
+import ruby.app.domain.Comment;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,6 +40,8 @@ class CommentControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+    @Autowired
+    CommentRepository commentRepository;
     @Autowired
     CommentService commentService;
     @Autowired
@@ -73,4 +82,20 @@ class CommentControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @DisplayName("댓글 삭제")
+    @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    void deleteComment() throws Exception {
+        mockMvc.perform(delete("/comments/9")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        Optional<Comment> comment = commentRepository.findById(9L);
+        assertThat(comment.isEmpty()).isTrue();
+    }
+
 }

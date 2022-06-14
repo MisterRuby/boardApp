@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import ruby.app.boards.service.BoardService;
 import ruby.app.domain.Account;
 import ruby.app.domain.Board;
 import ruby.app.domain.Comment;
+import ruby.app.util.paging.Paging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +48,11 @@ public class BoardController {
         Page<Board> boards =
                 boardService.lookupBoards(boardSearchForm.getPageNum(), boardSearchForm.getSearchOption(), boardSearchForm.getSearchWord());
         List<BoardForm> boardFormList = boards.stream().map(BoardForm::new).collect(Collectors.toList());
+        Paging paging = new Paging().setPagingNumbers(boards.getPageable(), boards.getTotalPages());
 
         if (account != null) model.addAttribute(account);
         model.addAttribute("boards", boardFormList);
-        model.addAttribute("totalPage", boards.getTotalPages());
+        model.addAttribute("paging", paging);
         model.addAttribute("optionList", SearchOption.values());
 
         return "/boards/boards";

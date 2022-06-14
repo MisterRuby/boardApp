@@ -40,7 +40,7 @@ public class SecurityConfig {
         /** 페이지 권한 설정 */
         http
             .authorizeRequests()
-            .mvcMatchers("/", "/account/sign-up","/account/check-email-token",
+            .mvcMatchers("/", "/account/sign-up","/account/check-email-token", "/account/checked-email",
                     "/account/password-reset", "/account/password-forget", "/account/password-forget-reset").permitAll()
             .anyRequest().authenticated();
 

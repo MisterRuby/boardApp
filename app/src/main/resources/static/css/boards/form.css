@@ -9,14 +9,21 @@
   height: 50px;
   padding: 0 10px;
   display: flex;
-  justify-content: space-between;
 }
 
 .top-nav>a {
+  position: relative;
   font-size: 24px;
   font-weight: 600;
+  margin-right: 30px;
 }
 
+.top-nav .account {
+  position: absolute;
+  right: 10px;
+}
+
+.menu a,
 .account a,
 .account button {
   font-size: 18px;

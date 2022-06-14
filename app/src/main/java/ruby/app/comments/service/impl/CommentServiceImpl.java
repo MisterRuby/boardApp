@@ -44,4 +44,13 @@ public class CommentServiceImpl implements CommentService {
                 () -> {throw new IllegalArgumentException("해당 게시글을 찾을 수 없습니다.");}
         );
     }
+
+    /**
+     * 댓글 삭제
+     * @param commentId
+     */
+    @Override
+    public void deleteComment(Long commentId) {
+        commentRepository.deleteById(commentId);
+    }
 }

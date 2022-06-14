@@ -3,6 +3,7 @@ package ruby.app.account;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,9 +14,17 @@ import ruby.app.account.repository.AccountRepository;
 import ruby.app.account.service.AccountService;
 import ruby.app.account.validate.PasswordResetFormValidator;
 import ruby.app.account.validate.SignUpFormValidator;
+import ruby.app.boards.form.BoardForm;
+import ruby.app.boards.form.BoardSearchForm;
+import ruby.app.boards.form.SearchOption;
+import ruby.app.boards.service.BoardService;
 import ruby.app.domain.Account;
+import ruby.app.domain.Board;
+import ruby.app.util.paging.Paging;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -25,6 +34,7 @@ public class AccountController {
 
     private final AccountRepository accountRepository;
     private final AccountService accountService;                            // 계정 서비스
+    private final BoardService boardService;                                // 게시글 서비스
     private final SignUpFormValidator signUpFormValidator;                  // 회원가입 검증
     private final PasswordResetFormValidator passwordResetFormValidator;    // 비밀번호 변경 검증
     private final ModelMapper modelMapper;                                   // ModelMapper
@@ -113,7 +123,10 @@ public class AccountController {
      * @return
      */
     @GetMapping("/{accountId}")
-    public String accountForm(@PathVariable Long accountId, @LoginAccount Account account, Model model) {
+    public String accountForm(
+            @PathVariable Long accountId,
+            @ModelAttribute @RequestParam(required = false, defaultValue = "0") int pageNum,
+            @LoginAccount Account account, Model model) {
         Optional<Account> accountOptional = accountRepository.findById(accountId);
 
         if (accountOptional.isEmpty()) {
@@ -123,6 +136,15 @@ public class AccountController {
 //        model.addAttribute("account", accountOptional.get());
         model.addAttribute(accountOptional.get());      // 생략할 경우 매개변수의 객체 타입명의 캐멀케이스 문자열 값이 키 값이 된다.
         model.addAttribute("isOwner", account.equals(accountOptional.get()));
+
+        Page<Board> boards =
+                boardService.lookupBoards(pageNum, SearchOption.NICKNAME, account.getNickname());
+        List<BoardForm> boardFormList = boards.stream().map(BoardForm::new).collect(Collectors.toList());
+        Paging paging = new Paging().setPagingNumbers(boards.getPageable(), boards.getTotalPages());
+
+        model.addAttribute("boards", boardFormList);
+        model.addAttribute("paging", paging);
+        model.addAttribute("optionList", SearchOption.values());
 
         return "account/profile";
     }
@@ -179,7 +201,9 @@ public class AccountController {
      */
     @PostMapping("/password-reset")
     public String passwordReset(@LoginAccount Account account,
-            @Validated @ModelAttribute("passwordResetForm") PasswordResetForm passwordResetForm, BindingResult bindingResult) {
+            @Validated @ModelAttribute("passwordResetForm") PasswordResetForm passwordResetForm, BindingResult bindingResult, Model model) {
+        if (account != null) model.addAttribute(account);
+
         // 필드 검증
         if (bindingResult.hasErrors()) return "account/password-reset";
 

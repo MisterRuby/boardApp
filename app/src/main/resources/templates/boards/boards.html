@@ -40,24 +40,19 @@
     </div>
 
     <div class="page-nav" th:if="${boards.size > 0}" th:object="${boardSearchForm}">
-      <a th:if="*{pageNum >= 10}"
+      <a th:if="${paging.start >= 10}"
          th:href="|@{/boards?}pageNum=0&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">&lt;&lt;</a>
-      <a th:if="*{pageNum >= 10}"
-         th:href="|@{/boards?}pageNum=*{pageNum / 10 * 10 - 1}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">이전</a>
+      <a th:if="${paging.start >= 10}"
+         th:href="|@{/boards?}pageNum=${paging.start - 1}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">이전</a>
 
-      <a th:if="${boardSearchForm.pageNum / 10 * 10 + 10 < totalPage}"
-         th:class="${boardSearchForm.pageNum == num ? 'select-page' : 'none-select-page'}"
-         th:each="num : *{#numbers.sequence(pageNum / 10 * 10, pageNum / 10 * 10 + 9)}"
-         th:href="|@{/boards?}pageNum=${num}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|" th:text="${num + 1}"></a>
-      <a th:if="${boardSearchForm.pageNum / 10 * 10 + 10 >= totalPage}"
-         th:class="${boardSearchForm.pageNum == num ? 'select-page' : 'none-select-page'}"
-         th:each="num : ${#numbers.sequence(boardSearchForm.pageNum / 10 * 10, totalPage - 1)}"
+      <a th:class="${paging.now == num ? 'select-page' : 'none-select-page'}"
+         th:each="num : ${#numbers.sequence(paging.start, paging.end)}"
          th:href="|@{/boards?}pageNum=${num}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|" th:text="${num + 1}"></a>
 
-      <a th:if="${boardSearchForm.pageNum / 10 * 10 + 10 < totalPage}"
-         th:href="|@{/boards?}pageNum=*{pageNum / 10 * 10 + 10}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">다음</a>
-      <a th:if="${boardSearchForm.pageNum / 10 * 10 + 10 < totalPage}"
-         th:href="|@{/boards?}pageNum=${totalPage - 1}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">&gt;&gt;</a>
+      <a th:if="${paging.end < paging.totalEnd}"
+         th:href="|@{/boards?}pageNum=${paging.end + 1}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">다음</a>
+      <a th:if="${paging.end < paging.totalEnd}"
+         th:href="|@{/boards?}pageNum=${paging.totalEnd}&searchOption=*{searchOption == null ? '' : searchOption}&searchWord=*{searchWord == null ? '' : searchWord}|">&gt;&gt;</a>
     </div>
 
     <form class="search-form" th:action="@{/boards}" th:object="${boardSearchForm}" method="get">

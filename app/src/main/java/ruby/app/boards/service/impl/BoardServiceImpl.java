@@ -14,6 +14,7 @@ import ruby.app.comments.repository.CommentRepository;
 import ruby.app.domain.Account;
 import ruby.app.domain.Board;
 import ruby.app.domain.Comment;
+import ruby.app.util.paging.Paging;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    private final int PAGE_PER_MAX_COUNT = 10;
+
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
@@ -78,7 +79,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public Page<Board> lookupBoards(int pageNum, SearchOption searchOption, String searchWord) {
-        Pageable pageable = PageRequest.of(pageNum, PAGE_PER_MAX_COUNT, Sort.by(searchOption.name()).descending());
+        Pageable pageable = PageRequest.of(pageNum, Paging.PAGE_PER_MAX_COUNT, Sort.by(searchOption.name()).descending());
         return boardRepository.findBoards(searchOption, searchWord, pageable);
     }
 

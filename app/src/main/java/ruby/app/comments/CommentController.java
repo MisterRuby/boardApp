@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ruby.app.account.form.LoginAccount;
 import ruby.app.boards.apiResult.ApiResult;
 import ruby.app.comments.form.CommentAddForm;
@@ -48,6 +45,18 @@ public class CommentController {
     }
 
     /**
+     * 댓글 삭제
+     * @param account
+     * @param commentId
+     * @return
+     */
+    @DeleteMapping("{commentId}")
+    public ResponseEntity<ApiResult<Long>> deleteComment(@LoginAccount Account account, @PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
+        return ResponseEntity.ok().body(new ApiResult<>(null, null));
+    }
+
+   /**
      * 글 등록시 필드 에러 확인 및 메시지
      * @param bindingResult
      * @return

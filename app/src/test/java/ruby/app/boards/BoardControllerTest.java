@@ -86,10 +86,10 @@ class BoardControllerTest {
         mockMvc.perform(get("/boards")
                         .param("pageNum", "999")
                         .param("searchOption", "EMPTY")
-                        .param("searchWord", "테스트")
+                        .param("searchWord", "ㄷㅁ넖몬어ㅠ란유라")
                         .with(csrf()))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is5xxServerError());
     }
 
     @Test
@@ -105,7 +105,7 @@ class BoardControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("/boards/boards"))
                 .andExpect(model().attributeExists("boards"))
-                .andExpect(model().attributeExists("totalPage"))
+                .andExpect(model().attributeExists("paging"))
                 .andExpect(model().attributeExists("optionList"));
     }
 
@@ -123,7 +123,7 @@ class BoardControllerTest {
     @DisplayName("게시글 상세 페이지 이동")
     @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void board() throws Exception {
-        mockMvc.perform(get("/boards/2"))
+        mockMvc.perform(get("/boards/25"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("/boards/board"))
@@ -188,7 +188,7 @@ class BoardControllerTest {
     @DisplayName("게시글 수정 페이지 이동")
     @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void editBoardForm() throws Exception {
-        mockMvc.perform(get("/boards/2/edit"))
+        mockMvc.perform(get("/boards/25/edit"))
                 .andDo(print())
                 .andExpect(view().name("/boards/editForm"))
                 .andExpect(model().attributeExists("boardEditForm"));
@@ -198,10 +198,10 @@ class BoardControllerTest {
     @DisplayName("제목이 두 글자 미만 시 게시글 수정 실패")
     @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void updateBoardErrorTitle() throws Exception {
-        Board board = boardService.lookupBoard(2L);
+        Board board = boardService.lookupBoard(25L);
         board.setTitle("한");
 
-        mockMvc.perform(patch("/boards/2/edit")
+        mockMvc.perform(patch("/boards/25/edit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(modelMapper.map(board, BoardEditForm.class)))
                 .with(csrf()))
@@ -227,16 +227,16 @@ class BoardControllerTest {
     @DisplayName("게시글 수정")
     @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void updateBoard() throws Exception {
-        Board board = boardService.lookupBoard(2L);
+        Board board = boardService.lookupBoard(25L);
         board.setTitle("수정됨");
 
-        mockMvc.perform(patch("/boards/2/edit")
+        mockMvc.perform(patch("/boards/25/edit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(modelMapper.map(board, BoardEditForm.class)))
                         .with(csrf()))
                 .andExpect(status().isOk());
 
-        Board updatedBoard = boardService.lookupBoard(2L);
+        Board updatedBoard = boardService.lookupBoard(25L);
         assertThat(updatedBoard.getTitle()).isEqualTo("수정됨");
     }
 
@@ -244,12 +244,12 @@ class BoardControllerTest {
     @DisplayName("게시글 삭제")
     @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void deleteBoard() throws Exception {
-        mockMvc.perform(delete("/boards/2/")
+        mockMvc.perform(delete("/boards/25/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf()))
                 .andExpect(status().isOk());
 
-        Optional<Board> board = boardRepository.findById(2L);
+        Optional<Board> board = boardRepository.findById(25L);
         assertThat(board.isEmpty()).isTrue();
     }
 }

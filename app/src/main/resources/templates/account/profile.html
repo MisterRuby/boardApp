@@ -22,62 +22,41 @@
 
     <!--/* 작성자의 작성글 목록 */-->
     <div class="boards">
-        <div class="board">
-            <!-- 글번호, 제목, 댓글수, 추천수, 조회수, 작성자 닉네임, 작성일자 -->
+        <div class="board" th:each="board : ${boards}">
             <div class="board-left">
-                <p class="no">10412</p>
-                <!-- TODO - board 로 넘어가야함 -->
-                <a th:href="@{/boards/1}">글 제목입니다.</a>
+                <p class="no" th:text="${board.boardId}">10412</p>
+                <a th:href="|@{/boards/}${board.boardId}|" th:text="${board.title}">글 제목입니다.</a>
             </div>
             <div class="board-right">
                 <div class="board-right-top">
-                    <span>댓글 3</span>
-                    <span>추천수 5</span>
-                    <span>조회수 10</span>
+                    <span th:text="|댓글 : ${board.replyCount}|">댓글 3</span>
+                    <span th:text="|추천수 : ${board.recommend}|">추천수 5</span>
+                    <span th:text="|조회수 : ${board.visited}|">조회수 10</span>
                 </div>
                 <div class="board-right-bottom">
                     <!-- TODO - 작성자 클릭 시 작성자의 프로필 조회 화면으로 이동 -->
-                    <span>작성자 : Ruby</span>
-                    <span>작성일 : 2022-05-31</span>
+                    <span th:text="|작성자 : ${board.nickname}|">작성자 : Ruby</span>
+                    <span th:text="|작성일 : ${board.createAt}|">작성일 : 2022-05-31</span>
                 </div>
             </div>
         </div>
-        <div class="board">
-            <!-- 글번호, 제목, 댓글수, 추천수, 조회수, 작성자 닉네임, 작성일자 -->
-            <div class="board-left">
-                <p class="no">10412</p>
-                <!-- TODO - board 로 넘어가야함 -->
-                <a th:href="@{/boards/1}">글 제목입니다.</a>
-            </div>
-            <div class="board-right">
-                <div class="board-right-top">
-                    <span>댓글 3</span>
-                    <span>추천수 5</span>
-                    <span>조회수 10</span>
-                </div>
-                <div class="board-right-bottom">
-                    <!-- TODO - 작성자 클릭 시 작성자의 프로필 조회 화면으로 이동 -->
-                    <span>작성자 : Ruby</span>
-                    <span>작성일 : 2022-05-31</span>
-                </div>
-            </div>
-        </div>
+
     </div>
-    <div class="page-nav">
-        <a href="#">&lt;&lt;</a>
-        <a href="#">&lt;</a>
-        <a href="#">11</a>
-        <a href="#">12</a>
-        <a href="#">13</a>
-        <a href="#">14</a>
-        <a href="#">15</a>
-        <a href="#">16</a>
-        <a href="#">17</a>
-        <a href="#">18</a>
-        <a href="#">19</a>
-        <a href="#">20</a>
-        <a href="#">&gt;</a>
-        <a href="#">&gt;&gt;</a>
+
+    <div class="page-nav" th:if="${boards.size > 0}" th:object="${boardSearchForm}">
+        <a th:if="${paging.start >= 10}"
+           th:href="|@{/account/}${account.id}?pageNum=0&searchOption=NICKNAME&searchWord=${account.nickname}|">&lt;&lt;</a>
+        <a th:if="${paging.start >= 10}"
+           th:href="|@{/account/}${account.id}?pageNum=${paging.start - 1}&searchOption=NICKNAME&searchWord=${account.nickname}|">이전</a>
+
+        <a th:class="${paging.now == num ? 'select-page' : 'none-select-page'}"
+           th:each="num : ${#numbers.sequence(paging.start, paging.end)}"
+           th:href="|@{/account/}${account.id}?pageNum=${num}&searchOption=NICKNAME&searchWord=${account.nickname}|" th:text="${num + 1}"></a>
+
+        <a th:if="${paging.end < paging.totalEnd}"
+           th:href="|@{/account/}${account.id}?pageNum=${paging.end + 1}&searchOption=NICKNAME&searchWord=${account.nickname}|">다음</a>
+        <a th:if="${paging.end < paging.totalEnd}"
+           th:href="|@{/account/}${account.id}?pageNum=${paging.totalEnd}&searchOption=NICKNAME&searchWord=${account.nickname}|">&gt;&gt;</a>
     </div>
 </div>
 

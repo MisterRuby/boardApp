@@ -11,4 +11,10 @@ public interface CommentService {
      * @param account
      */
     void addComment(String contents, Long boardId, Account account);
+
+    /**
+     * 댓글 삭제
+     * @param commentId
+     */
+    void deleteComment(Long commentId);
 }

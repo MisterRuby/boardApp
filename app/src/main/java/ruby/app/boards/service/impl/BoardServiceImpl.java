@@ -58,11 +58,13 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Board lookupBoard(Long boardId) {
         Board board = boardRepository.findBoardAndWriter(boardId);
-        if (board != null) {
-            board.addVisited();
-            List<Comment> comments = commentRepository.findCommentsAndWriter(board);
-            board.setComments(comments);
-        }
+
+        if (board == null) throw new IllegalArgumentException("요청한 데이터를 찾을 수 없습니다.");
+
+        board.addVisited();
+        List<Comment> comments = commentRepository.findCommentsAndWriter(board);
+        board.setComments(comments);
+
         return board;
     }
 

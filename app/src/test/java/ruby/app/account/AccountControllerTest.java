@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
 @Rollback
-@ActiveProfiles("test")
+@ActiveProfiles("dev")
 class AccountControllerTest {
 
     @Autowired
@@ -56,7 +56,7 @@ class AccountControllerTest {
     @MockBean
     EmailService emailService;
 
-    // 테스트 계정 - "ruby@naver.com", "ruby12", "123!@#qweQWE"
+    // 테스트 계정 - "rubykim0723@gmail.com", "ruby12", "123!@#qweQWE"
 
     @BeforeAll
     void addAdmin() {
@@ -69,7 +69,7 @@ class AccountControllerTest {
         mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(view().name("index"))
+                .andExpect(view().name("/index"))
                 .andExpect(unauthenticated());
     }
 
@@ -154,7 +154,7 @@ class AccountControllerTest {
     void validateExistsEmail() throws Exception {
         mockMvc.perform(
                         post("/account/sign-up")
-                                .param("email", "ruby@naver.com")
+                                .param("email", "rubykim0723@gmail.com")
                                 .param("nickname", "ruby141221")
                                 .param("password", "adaASD12$$")
                                 .with(csrf())
@@ -211,7 +211,7 @@ class AccountControllerTest {
     void checkedEmailWrongToken() throws Exception {
         mockMvc.perform(get("/account/check-email-token")
                 .param("token", "fewagagagn")
-                .param("email", "ruby@naver.com")
+                .param("email", "rubykim0723@gmail.com")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/checked-email"))
@@ -222,7 +222,7 @@ class AccountControllerTest {
     @Test
     @DisplayName("회원가입 이메일 인증 - 이메일 값 오류")
     void checkedEmailWrongEmail() throws Exception {
-        Account account = accountRepository.findByEmail("ruby@naver.com");
+        Account account = accountRepository.findByEmail("rubykim0723@gmail.com");
         String token = account.getEmailCheckToken();
 
         mockMvc.perform(get("/account/check-email-token")
@@ -238,12 +238,12 @@ class AccountControllerTest {
     @Test
     @DisplayName("회원가입 이메일 인증 - 정상 인증")
     void checkedEmail() throws Exception {
-        Account account = accountRepository.findByEmail("ruby@naver.com");
+        Account account = accountRepository.findByEmail("rubykim0723@gmail.com");
         String token = account.getEmailCheckToken();
 
         mockMvc.perform(get("/account/check-email-token")
                         .param("token", token)
-                        .param("email", "ruby@naver.com")
+                        .param("email", "rubykim0723@gmail.com")
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/checked-email"))
@@ -254,7 +254,7 @@ class AccountControllerTest {
 
     @Test
     @DisplayName("프로필 자기 소개 50자 초과")
-    @WithUserDetails(value = "ruby@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void updateProfileOverLengthBio() throws Exception {
         mockMvc.perform(post("/account/profile")
                         .param("bio",
@@ -269,10 +269,10 @@ class AccountControllerTest {
 
     @Test
     @DisplayName("프로필 수정")
-    @WithUserDetails(value = "ruby@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void updateProfile() throws Exception {
         // 실제 DB에 저장된 account 의 정보를 수정하는 테스트임으로 @WithUserDetails 로 접속 account 를 설정해주어야 한다.
-        Account account = accountRepository.findByEmail("ruby@naver.com");
+        Account account = accountRepository.findByEmail("rubykim0723@gmail.com");
 
         mockMvc.perform(post("/account/profile")
                         .param("bio", "내 소개 수정")
@@ -283,7 +283,7 @@ class AccountControllerTest {
 
     @Test
     @DisplayName("비밀번호 변경시 확인용 비밀번호와 불일치")
-    @WithUserDetails(value = "ruby@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void passwordResetNotEquals() throws Exception {
         mockMvc.perform(post("/account/password-reset")
                         .param("password", "12!@qwQW")
@@ -296,7 +296,7 @@ class AccountControllerTest {
 
     @Test
     @DisplayName("비밀번호 변경시 최대 길이 초과")
-    @WithUserDetails(value = "ruby@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void passwordResetOverLength() throws Exception {
         mockMvc.perform(post("/account/password-reset")
                         .param("password", "12!@qwQWkbdghjasbhcsdvksdbfsdbfkjdsbwaceihfsadsadasdsadasdasddasd" +
@@ -311,9 +311,9 @@ class AccountControllerTest {
 
     @Test
     @DisplayName("비밀번호 변경")
-    @WithUserDetails(value = "ruby@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void passwordReset() throws Exception {
-        Account account = accountRepository.findByEmail("ruby@naver.com");
+        Account account = accountRepository.findByEmail("rubykim0723@gmail.com");
 
         mockMvc.perform(post("/account/password-reset")
                         .param("password", "12!@qwQWasAS")

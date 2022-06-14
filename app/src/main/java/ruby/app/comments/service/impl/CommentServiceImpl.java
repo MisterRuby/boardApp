@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
                     commentRepository.save(comment);
                     board.addReplyCount();
                 },
-                () -> {throw new IllegalStateException("해당 게시글을 찾을 수 없습니다.");}
+                () -> {throw new IllegalArgumentException("해당 게시글을 찾을 수 없습니다.");}
         );
     }
 }

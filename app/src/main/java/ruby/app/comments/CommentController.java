@@ -2,7 +2,6 @@ package ruby.app.comments;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ruby.app.account.form.LoginAccount;
 import ruby.app.boards.apiResult.ApiResult;
 import ruby.app.comments.form.CommentAddForm;
-import ruby.app.comments.form.CommentAddResult;
 import ruby.app.comments.service.CommentService;
 import ruby.app.domain.Account;
 

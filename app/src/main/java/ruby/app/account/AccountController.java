@@ -136,7 +136,6 @@ public class AccountController {
     @GetMapping("/profile")
     public String editProfileForm(@LoginAccount Account account, Model model) {
         model.addAttribute(account);
-//        model.addAttribute(new ProfileForm(account));
         model.addAttribute(modelMapper.map(account, ProfileForm.class));
         return "account/editProfile";
     }
@@ -171,6 +170,13 @@ public class AccountController {
         return "account/password-reset";
     }
 
+    /**
+     * 비밀번호 변경
+     * @param account
+     * @param passwordResetForm
+     * @param bindingResult
+     * @return
+     */
     @PostMapping("/password-reset")
     public String passwordReset(@LoginAccount Account account,
             @Validated @ModelAttribute("passwordResetForm") PasswordResetForm passwordResetForm, BindingResult bindingResult) {

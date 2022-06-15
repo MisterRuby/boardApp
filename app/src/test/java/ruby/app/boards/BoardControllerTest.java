@@ -14,10 +14,12 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import ruby.app.account.repository.AccountRepository;
 import ruby.app.boards.form.BoardAddForm;
 import ruby.app.boards.form.BoardEditForm;
 import ruby.app.boards.repository.BoardRepository;
 import ruby.app.boards.service.BoardService;
+import ruby.app.domain.Account;
 import ruby.app.domain.Board;
 
 import java.util.ArrayList;
@@ -46,6 +48,8 @@ class BoardControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+    @Autowired
+    AccountRepository accountRepository;
     @Autowired
     BoardRepository boardRepository;
     @Autowired
@@ -185,6 +189,15 @@ class BoardControllerTest {
     }
 
     @Test
+    @DisplayName("작성자가 아닌 사용자가 게시글 수정페이지 이동")
+    @WithUserDetails(value = "ruby8700@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    void editBoardFormNotEqualsWriter() throws Exception {
+        mockMvc.perform(get("/boards/25/edit"))
+                .andDo(print())
+                .andExpect(view().name("/errors/403"));
+    }
+
+    @Test
     @DisplayName("게시글 수정 페이지 이동")
     @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void editBoardForm() throws Exception {
@@ -198,7 +211,9 @@ class BoardControllerTest {
     @DisplayName("제목이 두 글자 미만 시 게시글 수정 실패")
     @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void updateBoardErrorTitle() throws Exception {
-        Board board = boardService.lookupBoard(25L);
+        Account account = accountRepository.findByEmail("rubykim0723@gmail.com");
+
+        Board board = boardService.lookupBoard(25L, account);
         board.setTitle("한");
 
         mockMvc.perform(patch("/boards/25/edit")
@@ -224,10 +239,29 @@ class BoardControllerTest {
     }
 
     @Test
+    @DisplayName("작성자가 아닌 사용자가 게시글 수정")
+    @WithUserDetails(value = "ruby8700@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    void updateBoardNotEqualsWriter() throws Exception {
+        Account account = accountRepository.findByEmail("rubykim0723@gmail.com");
+
+        Board board = boardService.lookupBoard(25L, account);
+        board.setTitle("수정됨");
+
+        mockMvc.perform(patch("/boards/25/edit")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(modelMapper.map(board, BoardEditForm.class)))
+                        .with(csrf()))
+                .andExpect(status().is4xxClientError())
+                .andExpect(view().name("/errors/403"));
+    }
+
+    @Test
     @DisplayName("게시글 수정")
     @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void updateBoard() throws Exception {
-        Board board = boardService.lookupBoard(25L);
+        Account account = accountRepository.findByEmail("rubykim0723@gmail.com");
+
+        Board board = boardService.lookupBoard(25L, account);
         board.setTitle("수정됨");
 
         mockMvc.perform(patch("/boards/25/edit")
@@ -236,7 +270,7 @@ class BoardControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk());
 
-        Board updatedBoard = boardService.lookupBoard(25L);
+        Board updatedBoard = boardService.lookupBoard(25L, account);
         assertThat(updatedBoard.getTitle()).isEqualTo("수정됨");
     }
 

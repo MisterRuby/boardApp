@@ -2,6 +2,7 @@ package ruby.app.common;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -15,11 +16,23 @@ public class CommonExceptionControllerAdvice {
      * @param e
      * @return
      */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(IllegalArgumentException.class)
     public String illegalExceptionHandler(IllegalArgumentException e) {
-        log.error("[illegalExHandler] ex", e);
+        log.error("[illegalExceptionHandler] ex", e);
         return "/errors/404";
+    }
+
+    /**
+     * AccessDeniedException 발생시 403 페이지 반환
+     * @param e
+     * @return
+     */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public String accessDeniedExceptionHandler(AccessDeniedException e) {
+        log.error("[accessDeniedExceptionHandler] ex", e);
+        return "/errors/403";
     }
 
 

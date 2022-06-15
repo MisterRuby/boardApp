@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ruby.app.boards.form.SearchOption;
@@ -52,12 +53,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
-     * 게시글 상세 조회
+     * 게시글 상세 조회 - 단순 조회 및 댓글 포함 조회
      * @param boardId
      * @return
      */
     @Override
-    public Board lookupBoard(Long boardId) {
+    public Board lookupBoardAndComments(Long boardId) {
         Board board = boardRepository.findBoardAndWriter(boardId);
 
         if (board == null) throw new IllegalArgumentException("요청한 데이터를 찾을 수 없습니다.");
@@ -68,6 +69,22 @@ public class BoardServiceImpl implements BoardService {
 
         return board;
     }
+
+    /**
+     * 게시글 상세 조회 - 수정을 위한 게시글 조회
+     * @param boardId
+     * @return
+     */
+    @Override
+    public Board lookupBoard(Long boardId, Account account) {
+        Board board = boardRepository.findBoardAndWriter(boardId);
+
+        if (board == null) throw new IllegalArgumentException("요청한 데이터를 찾을 수 없습니다.");
+        if (!board.getAccount().getId().equals(account.getId())) throw new AccessDeniedException("게시글은 작성자 이외의 사용자가 수정할 수 없습니다.");
+
+        return board;
+    }
+
 
     /**
      * 게시글 목록 조회
@@ -85,15 +102,17 @@ public class BoardServiceImpl implements BoardService {
 
     /**
      * 게시글 수정
+     * @param accountId
      * @param boardId
      * @param title
      * @param contents
      * @return
      */
     @Override
-    public Optional<Board> updateBoard(Long boardId, String title, String contents) {
+    public Optional<Board> updateBoard(Long accountId, Long boardId, String title, String contents) {
         Optional<Board> optionalBoard = boardRepository.findById(boardId);
         optionalBoard.ifPresent(board -> {
+            if (!board.getAccount().getId().equals(accountId)) throw new AccessDeniedException("게시글은 작성자 이외의 사용자가 수정할 수 없습니다.");
             board.setTitle(title);
             board.setContents(contents);
             boardRepository.save(board);

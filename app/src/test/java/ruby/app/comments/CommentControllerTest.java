@@ -71,7 +71,7 @@ class CommentControllerTest {
     @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void addComment() throws Exception {
         CommentAddForm commentAddForm = new CommentAddForm();
-        commentAddForm.setBoardId(2L);
+        commentAddForm.setBoardId(25L);
         commentAddForm.setContents("댓글을 달아봅니다.");
 
         mockMvc.perform(post("/comments/add")
@@ -87,7 +87,7 @@ class CommentControllerTest {
     @DisplayName("댓글 삭제")
     @WithUserDetails(value = "rubykim0723@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void deleteComment() throws Exception {
-        mockMvc.perform(delete("/comments/9")
+        mockMvc.perform(delete("/comments/51")
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf())
                 )

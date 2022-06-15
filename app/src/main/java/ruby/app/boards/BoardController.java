@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -64,7 +64,7 @@ public class BoardController {
      */
     @GetMapping("/{boardId}")
     public String board(@PathVariable Long boardId, @LoginAccount Account account, Model model) {
-        Board board = boardService.lookupBoard(boardId);
+        Board board = boardService.lookupBoardAndComments(boardId);
         if (board == null) return "redirect:/boards";
 
         List<BoardInfoCommentForm> boardInfoCommentForms = new ArrayList<>();
@@ -110,10 +110,11 @@ public class BoardController {
      * @return
      */
     @GetMapping("/{boardId}/edit")
-    public String editForm(@LoginAccount @ModelAttribute Account account, @PathVariable Long boardId, Model model) {
-        Board board = boardService.lookupBoard(boardId);
-        model.addAttribute(modelMapper.map(board, BoardEditForm.class));
+    public String editForm(@LoginAccount Account account, @PathVariable Long boardId, Model model) {
+        if (account != null) model.addAttribute(account);
+        Board board = boardService.lookupBoard(boardId, account);
 
+        model.addAttribute(modelMapper.map(board, BoardEditForm.class));
         return "/boards/editForm";
     }
 
@@ -122,7 +123,8 @@ public class BoardController {
      * @return
      */
     @PatchMapping("/{boardId}/edit")
-    public ResponseEntity<ApiResult<Long>> editBoard(@LoginAccount @ModelAttribute Account account, @PathVariable Long boardId,
+    @ResponseBody
+    public ResponseEntity<ApiResult<Long>> editBoard(@LoginAccount Account account, @PathVariable Long boardId,
                             @RequestBody @Validated BoardEditForm boardEditForm, BindingResult bindingResult) {
 
         String errorMessage = getApiResultResponseEntity(bindingResult);
@@ -130,7 +132,7 @@ public class BoardController {
             return ResponseEntity.badRequest().body(new ApiResult<>(errorMessage, null));
         }
 
-        Optional<Board> board = boardService.updateBoard(boardId, boardEditForm.getTitle(), boardEditForm.getContents());
+        Optional<Board> board = boardService.updateBoard(account.getId(), boardId, boardEditForm.getTitle(), boardEditForm.getContents());
         if (board.isPresent()) {
             return ResponseEntity.ok().body(new ApiResult<>("글이 수정되었습니다.", boardId));
         }

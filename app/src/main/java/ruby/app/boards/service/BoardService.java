@@ -20,11 +20,19 @@ public interface BoardService {
 
 
     /**
-     * 게시글 상세 조회
+     * 게시글 상세 조회 - 단순 조회 및 댓글 포함 조회
      * @param boardId
      * @return
      */
-    Board lookupBoard(Long boardId);
+    Board lookupBoardAndComments(Long boardId);
+
+    /**
+     * 게시글 상세 조회 - 수정을 위한 게시글 조회
+     * @param boardId
+     * @param account
+     * @return
+     */
+    Board lookupBoard(Long boardId, Account account);
 
     /**
      * 게시글 목록 조회
@@ -37,12 +45,13 @@ public interface BoardService {
 
     /**
      * 게시글 수정
+     * @param accountId
      * @param boardId
      * @param title
      * @param contents
      * @return
      */
-    Optional<Board> updateBoard(Long boardId, String title, String contents);
+    Optional<Board> updateBoard(Long accountId, Long boardId, String title, String contents);
 
     /**
      * 게시글 삭제

@@ -192,7 +192,8 @@ public class AccountController {
      * @return
      */
     @GetMapping("/password-reset")
-    public String passwordResetForm(@ModelAttribute("passwordResetForm") PasswordResetForm passwordResetForm) {
+    public String passwordResetForm(@LoginAccount Account account, @ModelAttribute("passwordResetForm") PasswordResetForm passwordResetForm, Model model) {
+        if (account != null) model.addAttribute(account);
         return "account/password-reset";
     }
 
@@ -205,7 +206,7 @@ public class AccountController {
      */
     @PostMapping("/password-reset")
     public String passwordReset(@LoginAccount Account account,
-            @Validated @ModelAttribute("passwordResetForm") PasswordResetForm passwordResetForm, BindingResult bindingResult, Model model) {
+                                @Validated @ModelAttribute("passwordResetForm") PasswordResetForm passwordResetForm, BindingResult bindingResult, Model model) {
         if (account != null) model.addAttribute(account);
 
         // 필드 검증
@@ -240,10 +241,6 @@ public class AccountController {
         // 필드 검증
         if (bindingResult.hasErrors()) return "account/password-forget";
 
-        // 이메일 전송
-        // TODO - 이메일 인증 처럼 토큰 + url 조합으로 보낸다.
-        // /account/password-forget-reset?token=f9872584-dbd0-4d00-9e5b-3f6d6236e3a1&email=ruby@naver.com
-
         accountService.sendPasswordForgetEmail(passwordForgetForm.getEmail());
         model.addAttribute("sendEmail", true);
 
@@ -251,7 +248,7 @@ public class AccountController {
     }
 
     /**
-     * 이메일에서 비밀번호 변경 링크 클릭시 비밀번호 변경 페이지 이동
+     * 이메일에서 비밀번호 변경 링크 클릭시 비밀번호 변경 페이지 이동 - 로그인 처리한 후 페이지 이동
      */
     @GetMapping("/password-forget-reset")
     public String passwordForgetResetForm(String token, String email, Model model) {
@@ -262,33 +259,33 @@ public class AccountController {
             model.addAttribute("error", "wrong.email");
         } else if (!account.isValidToken(token)) {
             // 입력한 토큰 값이 다른 경우
-//            model.addAttribute("error", "wrong.token");
             return "redirect:/";
         } else {
             model.addAttribute("id", account.getId());
+            model.addAttribute("token", token);
         }
 
         PasswordResetForm passwordResetForm = new PasswordResetForm();
         passwordResetForm.setId(account.getId());
+        passwordResetForm.setToken(token);
         model.addAttribute(passwordResetForm);
 
         return "account/password-reset";
     }
 
     /**
-     * 이메일로 보낸 링크를 통한 비밀번호 변경 페이지에서 비밀번호 변경
+     * 이메일로 보낸 링크를 통한 비밀번호 변경 페이지에서 비밀번호 변경 - 시큐리티 적용 해야함
      * @param passwordResetForm
      * @param bindingResult
-     * @param model
      * @return
      */
     @PostMapping("/password-forget-reset")
-    public String passwordForgetReset(@Validated PasswordResetForm passwordResetForm, BindingResult bindingResult, Model model) {
+    public String passwordForgetReset(@Validated PasswordResetForm passwordResetForm, BindingResult bindingResult) {
         // 필드 검증
         if (bindingResult.hasErrors()) return "account/password-reset";
 
         Optional<Account> optionalAccount = accountRepository.findById(passwordResetForm.getId());
-        if (optionalAccount.isEmpty()) return "redirect:/";
+        if (optionalAccount.isEmpty() || !optionalAccount.get().isValidToken(passwordResetForm.getToken())) return "redirect:/";
 
         // 비밀번호, 확인용 비밀번호 일치 확인 검증
         Account account = optionalAccount.get();

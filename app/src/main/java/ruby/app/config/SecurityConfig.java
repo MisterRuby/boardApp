@@ -3,6 +3,7 @@ package ruby.app.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -40,9 +41,20 @@ public class SecurityConfig {
         /** 페이지 권한 설정 */
         http
             .authorizeRequests()
-            .mvcMatchers("/", "/account/sign-up","/account/check-email-token", "/account/checked-email",
-                    "/account/password-reset", "/account/password-forget", "/account/password-forget-reset").permitAll()
-            .anyRequest().authenticated();
+                .antMatchers(HttpMethod.PATCH, "/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/**").authenticated()
+                // account
+                .antMatchers("/", "/account/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/account/check-email", "/account/resend-confirm-email").authenticated()
+                .mvcMatchers(HttpMethod.POST, "/account/accountId").authenticated()
+                .mvcMatchers("/account/profile", "/account/password-reset").authenticated()
+                // boards
+                .antMatchers("/boards/**").permitAll()
+                .mvcMatchers(HttpMethod.DELETE, "/boards/boardId").authenticated()
+                .mvcMatchers( "/boards/add", "/boards/boardId/edit").authenticated()
+                .anyRequest().authenticated();
+
+        // add(get, post), {boardId}/edit (get)
 
         /** 로그인 처리 */
         http.formLogin()                               // 스프링 시큐리티가 제공하는 기본 로그인 화면 사용

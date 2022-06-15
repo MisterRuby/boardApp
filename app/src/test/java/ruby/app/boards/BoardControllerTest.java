@@ -31,14 +31,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
-/*
-    게시글 목록 페이지 이동 - 보류
-    게시글 상세 페이지 이동
-    게시글 작성 페이지 이동
-    게시글 등록
-    게시글 수정 페이지 이동 - 보류
-*/
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

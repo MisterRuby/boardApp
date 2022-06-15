@@ -20,7 +20,7 @@
           <span th:text="|조회 : *{boardVisited}|">추천수 10</span>
           <span th:text="|추천 : *{boardRecommend}|">조회수 10</span>
         </div>
-        <div class="board-btns" th:if="${account.id == board.writerId}" >
+        <div class="board-btns" th:if="${account != null && account.id == board.writerId}" >
           <a th:href="|@{/boards/}*{boardId}/edit|">수정</a>
           <button th:onclick="|deleteBoard(*{boardId})|">삭제</button>
         </div>
@@ -39,12 +39,12 @@
           <span class="comment-nickname" th:text="${comment.writerNickname}">Diamond</span>
           <span class="comment-createAt" th:text="${comment.commentCreateAt}">2022-06-10</span>
           <button class="comment-delete"
-                  th:if="${account.id == comment.writerId}"
+                  th:if="${account != null && account.id == comment.writerId}"
                   th:onclick="|deleteComment(${comment.commentId})|"
           >삭제</button>
           <div class="comment-contents" th:text="${comment.commentContents}">댓글 내용입니다.</div>
         </div>
-        <div class="comment-write">
+        <div class="comment-write" th:if="${account != null}">
           <h3 class="comment-write-name" th:text="${account.nickname}">empty</h3>
           <textarea id="comment-contents" class="comment-write-content"></textarea>
           <button class="comment-write-btn" th:onclick="|addComment(*{boardId})|">등록</button>

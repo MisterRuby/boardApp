@@ -2,11 +2,11 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/account/fragments :: head}"></head>
+<head th:replace="~{/account/fragments::head}"></head>
 
 <body>
 
-<div th:replace="~{/account/fragments :: top-nav (true)}"></div>
+<div th:replace="~{/account/fragments::top-nav(true)}"></div>
 <div class="container">
   <h2>회원 가입 절차를 완료하시려면 인증 이메일을 확인하세요.</h2>
   <p th:text="${account.email}">email</p>

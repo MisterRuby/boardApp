@@ -3,11 +3,11 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="~{/boards/fragments::head ('boards')}"></head>
+<head th:replace="~{/boards/fragments.html::head ('boards')}"></head>
 
 <body>
-  <div th:replace="~{/boards/fragments::board-top-nav}"></div>
-  <div th:replace="~{/fragments::email-verified-alert}"></div>
+  <div th:replace="~{/boards/fragments.html::board-top-nav}"></div>
+  <div th:replace="~{/fragments.html::email-verified-alert}"></div>
   <div class="container">
     <div class="boards-nav">
       <h2 class="title">Board</h2>

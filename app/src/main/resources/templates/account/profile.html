@@ -2,11 +2,11 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/account/fragments.html::head}"></head>
+<head th:replace="~{account/fragments.html::head}"></head>
 
 <body>
-<div th:replace="~{/account/fragments.html::top-nav(false)}"></div>
-<div th:replace="~{/fragments.html::email-verified-alert}"></div>
+<div th:replace="~{account/fragments.html::top-nav(false)}"></div>
+<div th:replace="~{fragments.html::email-verified-alert}"></div>
 
 <div class="profile-container">
     <img th:if="${#strings.isEmpty(infoAccount.profileImage)}" style="background-color: #ffffff;"/>

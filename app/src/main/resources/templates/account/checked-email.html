@@ -2,11 +2,11 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/account/fragments.html::head}"></head>
+<head th:replace="~{account/fragments.html::head}"></head>
 
 <body>
 
-<div th:replace="~{/account/fragments.html::top-nav(true)}"></div>
+<div th:replace="~{account/fragments.html::top-nav(true)}"></div>
 <div class="container">
     <h2>이메일 확인</h2>
     <p th:if="${error}">이메일 확인 링크가 정확하지 않습니다.</p>

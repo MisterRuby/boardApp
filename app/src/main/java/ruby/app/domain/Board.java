@@ -25,7 +25,6 @@ public class Board {
     /** 컬럼 */
     @Id
     @GeneratedValue
-    @SequenceGenerator(name = "board_seq")
     @Column(name = "board_id")
     private Long id;                        // PK. 게시글 번호
     private String title;                   // 게시글 제목

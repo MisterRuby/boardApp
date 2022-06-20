@@ -18,7 +18,7 @@ public class MainController {
     public String home(@LoginAccount Account account, Model model) {
         if (account != null) model.addAttribute(account);
 
-        return "/index";
+        return "index";
     }
 
     /**

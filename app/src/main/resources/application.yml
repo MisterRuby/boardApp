@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: dev, mail
+    include: prod, mail
 
 # variable
 app.host: http://localhost:8080

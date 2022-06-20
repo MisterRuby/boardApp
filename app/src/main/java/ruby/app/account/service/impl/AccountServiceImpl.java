@@ -2,9 +2,6 @@ package ruby.app.account.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,8 +18,6 @@ import ruby.app.domain.Account;
 import ruby.app.util.mail.EmailMessage;
 import ruby.app.util.mail.EmailService;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.util.List;
 
 @Slf4j

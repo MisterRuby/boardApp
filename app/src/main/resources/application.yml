@@ -1,14 +1,11 @@
 spring:
   profiles:
-    active: dev
+    include: dev, mail
 
----
-
-spring:
-  profiles:
-    active: local
-
----
-
-
+# variable
 app.host: http://localhost:8080
+
+# 이미지를 포함한 요청을 처리하기 위해 최대 전송 크기 변경
+server:
+  tomcat:
+    max-http-form-post-size: 20MB

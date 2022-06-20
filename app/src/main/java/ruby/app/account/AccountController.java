@@ -102,7 +102,7 @@ public class AccountController {
     @GetMapping("/check-email")
     public String checkEmailForm(@LoginAccount Account account, Model model) {
         model.addAttribute("account", account);
-        return "/account/check-email";
+        return "account/check-email";
     }
 
     /**

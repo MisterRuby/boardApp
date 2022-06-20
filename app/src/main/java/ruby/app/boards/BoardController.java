@@ -55,7 +55,7 @@ public class BoardController {
         model.addAttribute("paging", paging);
         model.addAttribute("optionList", SearchOption.values());
 
-        return "/boards/boards";
+        return "boards/boards";
     }
 
     /**
@@ -76,7 +76,7 @@ public class BoardController {
         model.addAttribute("board", new BoardInfoForm(board));
         model.addAttribute("comments", boardInfoCommentForms);
 
-        return "/boards/board";
+        return "boards/board";
     }
 
     /**
@@ -115,7 +115,7 @@ public class BoardController {
         Board board = boardService.lookupBoard(boardId, account);
 
         model.addAttribute(modelMapper.map(board, BoardEditForm.class));
-        return "/boards/editForm";
+        return "boards/editForm";
     }
 
     /**

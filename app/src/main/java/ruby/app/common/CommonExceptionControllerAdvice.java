@@ -20,7 +20,7 @@ public class CommonExceptionControllerAdvice {
     @ExceptionHandler(IllegalArgumentException.class)
     public String illegalExceptionHandler(IllegalArgumentException e) {
         log.error("[illegalExceptionHandler] ex", e);
-        return "/errors/404";
+        return "errors/404";
     }
 
     /**
@@ -32,7 +32,7 @@ public class CommonExceptionControllerAdvice {
     @ExceptionHandler(AccessDeniedException.class)
     public String accessDeniedExceptionHandler(AccessDeniedException e) {
         log.error("[accessDeniedExceptionHandler] ex", e);
-        return "/errors/403";
+        return "errors/403";
     }
 
 
@@ -43,6 +43,6 @@ public class CommonExceptionControllerAdvice {
     @ExceptionHandler
     public String exceptionHandler(Exception e) {
         log.error("[exceptionHandler] ex", e);
-        return "/errors/500";
+        return "errors/500";
     }
 }

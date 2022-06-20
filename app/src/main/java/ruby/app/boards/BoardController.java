@@ -85,7 +85,7 @@ public class BoardController {
      */
     @GetMapping("/add")
     public String addForm(@ModelAttribute @LoginAccount Account account) {
-        return "/boards/addForm";
+        return "boards/addForm";
     }
 
     /**

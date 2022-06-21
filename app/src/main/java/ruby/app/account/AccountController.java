@@ -15,7 +15,6 @@ import ruby.app.account.service.AccountService;
 import ruby.app.account.validate.PasswordResetFormValidator;
 import ruby.app.account.validate.SignUpFormValidator;
 import ruby.app.boards.form.BoardForm;
-import ruby.app.boards.form.BoardSearchForm;
 import ruby.app.boards.form.SearchOption;
 import ruby.app.boards.service.BoardService;
 import ruby.app.domain.Account;

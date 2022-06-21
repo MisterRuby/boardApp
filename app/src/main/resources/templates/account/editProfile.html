@@ -15,7 +15,7 @@
         <img id="profile-img" th:if="${!#strings.isEmpty(account.profileImage)}" th:src="*{profileImage}" />
         <label for="profile-img-input">이미지 변경</label>
         <input id="profile-img-input" type="file" hidden/>
-        <input id="profileImage" name="profileImage" type="text" hidden/>
+        <input id="profileImage" name="profileImage" type="text" th:value="*{profileImage}" hidden/>
     </div>
 
     <div class="profile-edit">

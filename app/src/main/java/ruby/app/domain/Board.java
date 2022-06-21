@@ -29,6 +29,7 @@ public class Board {
     @Column(name = "board_id")
     private Long id;                        // PK. 게시글 번호
     private String title;                   // 게시글 제목
+    @Column(length = 4000)
     private String contents;                // 게시글 본문
     private LocalDateTime createAt;         // 작성일
     private int visited;                    // 방문자 수

@@ -31,6 +31,11 @@
         contents : contentComp.innerHTML
       }
 
+      if (boardEditForm.contents.length > 4000) {
+        alert("글 본문은 최대 4000자를 이하이어야 합니다.");
+        return;
+      }
+
       fetch(`/boards/${boardId}/edit`, {
         method: "PATCH",
         headers: {

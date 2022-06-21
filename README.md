@@ -6,7 +6,7 @@
 - 개발 기간 : 2022.5.30 ~ 2022.6.14
 - 개발 언어 : Java 11
 - 개발 기술
-    - Springboot, Spring Security, Spring Data JPA & QueryDSL, JUnit, AWS (EC2 & S3)
+    - Spring Boot, Spring Security, Spring Data JPA & QueryDSL, JUnit, AWS (EC2 & S3)
 - 프로젝트 목적
     - 게시판 제작을 통해 웹의 기본적인 흐름을 이해
 - 배포

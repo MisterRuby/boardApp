@@ -30,8 +30,8 @@
     
 
 - Board - 게시글
-    
-    <img width="679" alt="image" src="https://user-images.githubusercontent.com/93859705/174723990-85383b45-21ab-4c16-a04f-c47b2576fe7e.png">
+
+    <img width="898" alt="image" src="https://user-images.githubusercontent.com/93859705/174817365-a635fa81-cf48-4467-a185-175268e2970d.png">
     
 
 - Comment - 댓글
